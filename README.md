@@ -1,13 +1,13 @@
-# azure-oracle-pg-migrator
+# Oracle → Azure Database for PostgreSQL — Rapid Migration POC
 
-A **complete, self-contained Oracle to Azure Database for PostgreSQL schema-conversion lab**,
-deployed by a single **Deploy to Azure** button. One click provisions everything inside a
-single virtual network:
+A **complete, self-contained rapid POC** for converting an Oracle schema to **Azure Database
+for PostgreSQL**, deployed by a single **Deploy to Azure** button. One click provisions
+everything inside a single virtual network:
 
 - a **Windows workstation** running desktop **Visual Studio Code + the Microsoft PostgreSQL
   extension** (the tool that performs the AI conversion),
 - an **Oracle source database** (Oracle Database Free 23ai in a container) pre-seeded with a
-  sample **HR** schema,
+  sample **HR** schema — so you can prove the tooling end to end with zero external dependencies,
 - an **Azure Database for PostgreSQL flexible server** as the conversion target, and
 - an **Azure OpenAI (Microsoft Foundry)** model deployment that powers the AI conversion.
 
@@ -15,16 +15,24 @@ Everything is network-isolated and reached privately over **Azure Bastion**. No 
 conversion logic runs here — the PostgreSQL extension does the work; this repo just stands
 up the whole environment for you.
 
+You can run the POC two ways:
+
+1. **Against the built-in Oracle source** (recommended first) — validates the workstation,
+   Bastion access, the PostgreSQL target, and your Azure OpenAI quota with no external
+   dependencies, using the pre-seeded HR schema.
+2. **Against your own dev/test Oracle** — once the built-in run succeeds, point the wizard at
+   a real Oracle database instead. See [Use your own Oracle source](#use-your-own-oracle-source)
+   for the prerequisites.
+
 ## Deploy to Azure
 
 Click the button, sign in to the Azure portal, fill in the form (admin username and
-password, VM sizes, PostgreSQL tier, an optional Microsoft Entra admin for the PostgreSQL
-server, and model deployment name), and select **Review + create**. Everything — workstation,
-Oracle source, PostgreSQL target, and the Azure OpenAI deployment — is created for you. No
-CLI required.
+password, VM sizes, PostgreSQL tier, and model deployment name), and select
+**Review + create**. Everything — workstation, Oracle source, PostgreSQL target, and the
+Azure OpenAI deployment — is created for you. No CLI required.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Fazure-oracle-pg-migrator%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Fazure-oracle-pg-migrator%2Fmain%2Fdeploy%2Fazure%2FcreateUiDefinition.json)
-[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Fazure-oracle-pg-migrator%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2FcreateUiDefinition.json)
+[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json)
 
 After the deployment finishes, see [Connect to the workstation](deploy/azure/DEPLOYMENT.md#connect)
 to open the Azure Bastion RDP tunnel and start the Migration Wizard.
@@ -46,7 +54,7 @@ The workstation is a Windows Server 2022 VM provisioned at deploy time by
 
 - **Visual Studio Code** (desktop, added to `PATH`)
 - **Oracle Instant Client 21.13** (thick-client mode, on `PATH`) — connects to the Oracle source
-- **Azure CLI** — Microsoft Entra ID sign-in for Foundry and the PostgreSQL target
+- **Azure CLI** — Azure sign-in (`az login`) for working with the deployed resources
 
 > **First-logon note:** the three extensions install via a Windows `RunOnce` entry the first
 > time you sign in, so they need outbound access to the VS Code Marketplace at that moment and
@@ -79,7 +87,6 @@ az deployment group show -g oracle-bridge-rg -n <deployment-name> \
 | Oracle migration user | `MIG` + your deploy password | seeded, read-only |
 | PostgreSQL server | e.g. `orabridge-pg-xxxx.postgres.database.azure.com` | `postgresFqdn` |
 | PostgreSQL admin | `azureuser` + your deploy password | `postgresAdmin` |
-| PostgreSQL Entra admin | tokenless sign-in via Browse Azure (only if you set one) | `postgresEntraAdmin` |
 | Foundry endpoint | e.g. `https://orabridge-oai-xxxx.openai.azure.com/` | `foundryEndpoint` |
 | Foundry deployment | `gpt-5-mini` | `foundryDeployment` |
 
@@ -102,13 +109,12 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
 1. **Project Setup** — name the project, then **Next**.
 2. **Connect to Oracle** — host `oraclePrivateIp`, port `1521`, service `FREEPDB1`, user
    `MIG` with your deploy password. Select **Load Schemas**, choose **HR**, then **Next**.
-3. **Scratch database** — connect to the PostgreSQL flexible server (`postgresFqdn`). If you
-   set a Microsoft Entra admin at deploy time (`entraAdminObjectId`), choose **Browse Azure**
-   and select the server with **Microsoft Entra ID** authentication — no password to enter or
-   store. Otherwise connect with admin `azureuser` and your deploy password. Pick a target
-   database, select **Verify Extensions**, then **Next**.
-4. **Microsoft Foundry** — enter `foundryEndpoint` and the deployment name `gpt-5-mini`,
-   and choose **Microsoft Entra ID** for authentication.
+3. **Scratch database** — connect to the PostgreSQL flexible server (`postgresFqdn`) with
+   admin `azureuser` and your deploy password (SSL mode `require`). Pick a target database,
+   select **Verify Extensions**, then **Next**.
+4. **Microsoft Foundry** — enter `foundryEndpoint` and the **deployment name** `gpt-5-mini`
+   (this is the model deployment, not the resource name), and authenticate with the **API key**
+   from the Azure OpenAI resource (**Keys and Endpoint**).
 5. Select **Test Connection**, then **Create Migration Project**.
 
 ### 4. Run the conversion
@@ -149,11 +155,60 @@ propagated), then apply `deploy.sql` to the PostgreSQL server.
 > needs dictionary read access. Connect as a privileged user and run
 > `GRANT SELECT ANY DICTIONARY TO MIG;` (new deployments already include this grant).
 
+## Use your own Oracle source
+
+The built-in `oracle-source-vm` exists so you can prove the end-to-end flow with zero external
+dependencies. Once that run succeeds, you can point the Migration Wizard at your own
+**dev/test** Oracle instead — nothing on the workstation changes (the Oracle Instant Client is
+already installed). Before you connect, make sure the following are in place.
+
+> **Recommended:** run the POC once against the built-in Oracle source first. It validates the
+> workstation, Bastion access, the PostgreSQL target, and your Azure OpenAI quota — so if
+> anything is off, you know it isn't your own database or network.
+
+**1. Network path (workstation → your Oracle on port 1521)**
+
+The `migration-workstation` must be able to reach your Oracle listener on **1521**. Choose one:
+
+- **VNet peering** — peer this deployment's VNet with the VNet hosting your Oracle.
+- **Site-to-site VPN or ExpressRoute** — for an on-premises Oracle.
+- **Public endpoint** — the workstation has outbound internet, so your Oracle's firewall/NSG can
+  instead allow inbound 1521 from the workstation's public IP (`publicFqdn`). Least preferred;
+  only for non-sensitive dev/test.
+
+**2. A read-only migration login**
+
+Create a login for the wizard with the same privileges the built-in `MIG` user gets:
+
+```sql
+CREATE USER MIG IDENTIFIED BY "<strong-password>";
+GRANT CREATE SESSION        TO MIG;
+GRANT SELECT ANY DICTIONARY TO MIG;   -- covers SYS.ARGUMENT$ etc. the wizard reads
+GRANT SELECT_CATALOG_ROLE    TO MIG;
+GRANT SELECT ANY TABLE       TO MIG;   -- or grant SELECT only on the schemas you convert
+```
+
+The conversion **only reads** the source — it never writes to your Oracle — so it is safe to run
+against dev/test.
+
+**3. The correct connect identifier**
+
+Use the **service name** of the pluggable database (PDB) you want to convert — not the CDB root
+— along with the host and port 1521. A wrong service name is the most common connection failure.
+
+**4. TLS/wallet (only if your Oracle enforces TCPS)**
+
+The default path assumes plain TCP on 1521. If your Oracle requires encrypted connections
+(TCPS), supply the wallet/certificate to the Oracle Instant Client on the workstation.
+
+Everything else in the workflow above is identical — just enter your Oracle's host, port, service
+name, and the migration-user credentials at the **Connect to Oracle** step.
+
 ## Tear down
 
 When you're done, remove everything by deleting the resource group. Azure has no native
 one-click *delete* URL (by design), so this button opens the **Resource groups** blade in
-the portal — pick the lab's group (for example `oracle-bridge-rg`) and choose
+the portal — pick the POC's resource group (for example `oracle-bridge-rg`) and choose
 **Delete resource group**:
 
 [![Delete resources](https://img.shields.io/badge/Delete-resource%20group-critical?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://portal.azure.com/#browse/resourcegroups)
@@ -177,7 +232,7 @@ az group delete -n oracle-bridge-rg --yes
 |---|---|
 | [deploy/azure/azuredeploy.json](deploy/azure/azuredeploy.json) | Compiled ARM template behind the **Deploy to Azure** button |
 | [deploy/azure/createUiDefinition.json](deploy/azure/createUiDefinition.json) | Portal form definition for the one-click deployment |
-| [deploy/azure/main.bicep](deploy/azure/main.bicep) | Bicep source — provisions the whole lab: VNet/NSG/Bastion, the Windows workstation, the Oracle source VM, the PostgreSQL flexible server, and the Azure OpenAI deployment |
+| [deploy/azure/main.bicep](deploy/azure/main.bicep) | Bicep source — provisions the whole POC environment: VNet/NSG/Bastion, the Windows workstation, the Oracle source VM, the PostgreSQL flexible server, and the Azure OpenAI deployment |
 | [deploy/azure/setup.ps1](deploy/azure/setup.ps1) | PowerShell run by an Azure Run Command — installs VS Code + PostgreSQL extension + Oracle Instant Client + Azure CLI on the workstation |
 | [deploy/azure/teardown.sh](deploy/azure/teardown.sh) | Deletes the resource group and purges the soft-deleted Azure OpenAI account |
 | [deploy/azure/cloud-init.yaml](deploy/azure/cloud-init.yaml) | Cloud-init for the **Oracle source VM** — installs Docker, runs Oracle Database Free 23ai, and seeds the sample HR schema on first boot |
@@ -223,6 +278,6 @@ steps, the in-editor workflow, security notes, and tear-down.
 - RDP only, via an Azure Bastion tunnel — no SSH, no public RDP port; RDP (3389) is reachable only from the virtual network.
 - The Oracle source (1521) and the PostgreSQL flexible server are reachable **only from within the virtual network** — no public database endpoints. PostgreSQL uses private access with a private DNS zone.
 - No public web ports.
-- The login password is a `@secure()` deploy-time parameter (not stored in the template) and can be rotated with `az vm run-command`. It is reused for the Oracle and PostgreSQL admin accounts for lab convenience — change them for anything beyond a lab.
+- The login password is a `@secure()` deploy-time parameter (not stored in the template) and can be rotated with `az vm run-command`. It is reused for the Oracle and PostgreSQL admin accounts for POC convenience — change them for anything beyond a POC.
 - The workstation uses a system-assigned managed identity, granted only the **Cognitive Services OpenAI User** role on the lab's Azure OpenAI account.
 - Independently validate all converted objects before deploying to production.

@@ -1,6 +1,6 @@
-# Azure deployment — Oracle to PostgreSQL schema-conversion lab
+# Azure deployment — Oracle to PostgreSQL rapid migration POC
 
-This package provisions a **complete, self-contained schema-conversion lab** inside a single
+This package provisions a **complete, self-contained rapid migration POC** inside a single
 virtual network:
 
 - a **Windows Server 2022** workstation running desktop **Visual Studio Code + the Microsoft
@@ -15,7 +15,7 @@ PostgreSQL server — exactly the local workflow, but entirely inside the virtua
 it can reach the privately networked Oracle source.
 
 No custom conversion logic runs on the workstation. The PostgreSQL extension's Migration
-Wizard does the work; the lab only stands up an environment that has line of sight to
+Wizard does the work; the POC only stands up an environment that has line of sight to
 Oracle, PostgreSQL, and Azure OpenAI.
 
 ## What gets deployed
@@ -66,7 +66,7 @@ The simplest path is the one-click **Deploy to Azure** button, which opens the A
 portal with a form for the admin username and password, VM sizes, PostgreSQL tier, and the
 model deployment name. No local tooling is required.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Fazure-oracle-pg-migrator%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json/uiFormDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Fazure-oracle-pg-migrator%2Fmain%2Fdeploy%2Fazure%2FcreateUiDefinition.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2FcreateUiDefinition.json)
 
 To deploy from the command line instead:
 

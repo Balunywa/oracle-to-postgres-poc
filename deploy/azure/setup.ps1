@@ -69,7 +69,7 @@ Start-Process -Wait -FilePath 'msiexec.exe' -ArgumentList '/i',"$azMsi",'/qn','/
 # so the full names are written here to avoid mistyped/truncated hostnames.
 Prog 'Writing connection details to the Public desktop...'
 $connInfo = @"
-=== Oracle -> Azure Database for PostgreSQL lab: connection details ===
+=== Oracle -> Azure Database for PostgreSQL POC: connection details ===
 Open Visual Studio Code and use these in the PostgreSQL extension.
 
 PostgreSQL target  (Scratch database step)

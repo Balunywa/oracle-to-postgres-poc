@@ -6,7 +6,7 @@
     "config": {
       "isWizard": false,
       "basics": {
-        "description": "Deploy a complete, network-isolated **Oracle to Azure Database for PostgreSQL schema-conversion lab**: a Windows workstation (Visual Studio Code + the Microsoft PostgreSQL extension), an Oracle source database, an Azure Database for PostgreSQL flexible server, and an Azure OpenAI (Microsoft Foundry) deployment for AI-assisted conversion. All resources sit inside a single virtual network and are reached privately over Azure Bastion. [Learn more](https://github.com/Balunywa/azure-oracle-pg-migrator)."
+        "description": "Deploy a complete, network-isolated **Oracle to Azure Database for PostgreSQL rapid migration POC**: a Windows workstation (Visual Studio Code + the Microsoft PostgreSQL extension), an Oracle source database, an Azure Database for PostgreSQL flexible server, and an Azure OpenAI (Microsoft Foundry) deployment for AI-assisted conversion. All resources sit inside a single virtual network and are reached privately over Azure Bastion. [Learn more](https://github.com/Balunywa/oracle-to-postgres-poc)."
       }
     },
     "basics": [

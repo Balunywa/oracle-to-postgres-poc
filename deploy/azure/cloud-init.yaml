@@ -1,5 +1,5 @@
 #cloud-config
-# Provisions the Oracle SOURCE for the schema-conversion lab: an Ubuntu VM that
+# Provisions the Oracle SOURCE for the rapid migration POC: an Ubuntu VM that
 # runs Oracle Database Free 23ai in a container, seeded with a sample HR schema.
 # Reached privately on port 1521 from inside the virtual network (no public
 # ports). Consumed by main.bicep as the Oracle VM's custom-data; the tokens
@@ -7,7 +7,7 @@
 #
 # The database exposes service FREEPDB1 with two accounts (both use the deploy
 # password): HR (owns the sample schema) and MIG (read-only migration user with
-# SELECT_CATALOG_ROLE), matching the Oracle-to-PostgreSQL conversion lab.
+# SELECT_CATALOG_ROLE), matching the Oracle-to-PostgreSQL conversion POC.
 
 package_update: true
 

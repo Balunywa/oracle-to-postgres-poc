@@ -1,4 +1,4 @@
-// Complete Oracle -> Azure Database for PostgreSQL schema-conversion lab in one
+// Complete Oracle -> Azure Database for PostgreSQL rapid migration POC in one
 // deployment. Everything runs inside a single virtual network, reached privately
 // over Azure Bastion:
 //   * Windows workstation: desktop VS Code + the Microsoft PostgreSQL extension
