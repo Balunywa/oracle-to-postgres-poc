@@ -196,10 +196,14 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
    (this is the model deployment, not the resource name). Authenticate either way:
    - **API key** (simplest) — copy it from the Azure OpenAI resource → **Keys and Endpoint**.
      Reading the key requires Contributor/Owner on the resource, which you have as the deployer.
+     *If the portal shows "API key authentication is disabled by your resource owner", your
+     subscription has a policy that disables local auth (`disableLocalAuth = true`) — keys are
+     unavailable, so use the Microsoft Entra ID option below instead.*
    - **Microsoft Entra ID** — sign in with the **same account you deployed with**. The template
      grants that account the **Cognitive Services OpenAI User** role on the resource, so
-     inference calls are authorized without a key. (A *different* account has no access and
-     will fail with `PermissionDenied` — use the API key, or grant it the role.)
+     inference calls are authorized without a key. This is the **required** path in governed
+     subscriptions where key auth is disabled by policy. (A *different* account has no access
+     and will fail with `PermissionDenied` — grant it the same role.)
 5. Select **Test Connection**, then **Create Migration Project**.
 
 ### 4. Run the conversion

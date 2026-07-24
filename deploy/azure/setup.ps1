@@ -90,7 +90,11 @@ Oracle source  (Connect to Oracle step)
 Foundry  (AI conversion step)
   Endpoint    : __FOUNDRY_ENDPOINT__
   Deployment  : __FOUNDRY_DEPLOYMENT__  (this is the model deployment, not the resource name)
-  Auth        : API Key (Azure OpenAI resource -> Keys and Endpoint)
+  Auth        : Microsoft Entra ID - sign in with the account you deployed with
+                (it has the Cognitive Services OpenAI User role), OR API Key from the
+                Azure OpenAI resource -> Keys and Endpoint.
+                NOTE: if the portal shows "API key authentication is disabled by your
+                resource owner", key auth is blocked by policy - use Entra ID sign-in.
 
 Use the FULL PostgreSQL server name above (ends in .postgres.database.azure.com).
 It resolves only from THIS workstation - the databases have no public endpoint.
