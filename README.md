@@ -24,6 +24,47 @@ You can run the POC two ways:
    a real Oracle database instead. See [Use your own Oracle source](#use-your-own-oracle-source)
    for the prerequisites.
 
+## Prerequisites: resource providers
+
+The template uses four Azure resource providers. On an established subscription they are
+usually already registered; on a **brand-new subscription** one or more may not be:
+
+| Resource provider | Used for |
+|---|---|
+| `Microsoft.Compute` | Windows workstation + Oracle source VMs |
+| `Microsoft.Network` | VNet, NSG, public IPs, NICs, Bastion, private DNS |
+| `Microsoft.DBforPostgreSQL` | Azure Database for PostgreSQL flexible server |
+| `Microsoft.CognitiveServices` | Azure OpenAI (Microsoft Foundry) account + deployment |
+
+**Deploying with the button (portal):** the Azure portal registers any missing providers
+automatically during validation, so you normally don't have to do anything.
+
+**Deploying from the CLI / PowerShell, or to be safe on a fresh subscription:** register them
+first. Each call is idempotent and returns immediately; registration finishes in the
+background within a minute or two. You need `Contributor` or `Owner` on the subscription.
+
+```bash
+# Azure CLI — register all four (safe to re-run)
+for rp in Microsoft.Compute Microsoft.Network Microsoft.DBforPostgreSQL Microsoft.CognitiveServices; do
+  az provider register --namespace "$rp"
+done
+
+# optional: confirm all four report "Registered" before deploying
+for rp in Microsoft.Compute Microsoft.Network Microsoft.DBforPostgreSQL Microsoft.CognitiveServices; do
+  printf '%s\t%s\n' "$rp" "$(az provider show --namespace "$rp" --query registrationState -o tsv)"
+done
+```
+
+```powershell
+# PowerShell equivalent
+'Microsoft.Compute','Microsoft.Network','Microsoft.DBforPostgreSQL','Microsoft.CognitiveServices' |
+  ForEach-Object { Register-AzResourceProvider -ProviderNamespace $_ }
+```
+
+If a provider is not registered, the deployment fails with `MissingSubscriptionRegistration`
+("The subscription is not registered to use namespace 'Microsoft.X'"). Registering the named
+provider and redeploying resolves it.
+
 ## Deploy to Azure
 
 Click the button, sign in to the Azure portal, fill in the form (admin username and
