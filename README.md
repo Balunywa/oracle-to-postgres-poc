@@ -65,6 +65,43 @@ If a provider is not registered, the deployment fails with `MissingSubscriptionR
 ("The subscription is not registered to use namespace 'Microsoft.X'"). Registering the named
 provider and redeploying resolves it.
 
+### Public IP feature flag (first-time subscriptions)
+
+Separately from the providers above, some subscriptions gate public-IP creation behind a
+**subscription feature flag** (registered through Azure Feature Exposure Control, `az feature`).
+If deployment fails with:
+
+> `... is not registered for feature Microsoft.Network/AllowBringYourOwnPublicIpAddress
+> required to carry out the requested operation`
+
+register the feature, wait until it reports **Registered**, then re-register the provider so
+the change propagates and redeploy. Unlike resource providers, the portal does **not**
+auto-register these feature flags, so this step is manual and can take a few minutes:
+
+```bash
+# Azure CLI
+az feature register --namespace Microsoft.Network --name AllowBringYourOwnPublicIpAddress
+
+# poll until this prints "Registered"
+az feature show --namespace Microsoft.Network --name AllowBringYourOwnPublicIpAddress \
+  --query properties.state -o tsv
+
+# propagate the feature to the provider, then redeploy
+az provider register --namespace Microsoft.Network
+```
+
+```powershell
+# PowerShell
+Register-AzProviderFeature -FeatureName AllowBringYourOwnPublicIpAddress -ProviderNamespace Microsoft.Network
+(Get-AzProviderFeature -FeatureName AllowBringYourOwnPublicIpAddress -ProviderNamespace Microsoft.Network).RegistrationState
+Register-AzResourceProvider -ProviderNamespace Microsoft.Network
+```
+
+> The flag name is misleading: this template does **not** use BYOIP or custom IP prefixes. It
+> only creates ordinary Azure-allocated Standard public IPs (one for Azure Bastion, one for the
+> workstation). On some subscriptions Azure gates *all* Standard public IP creation behind this
+> flag despite its name, so registering it simply enables ordinary public IPs.
+
 ## Deploy to Azure
 
 Click the button, sign in to the Azure portal, fill in the form (admin username and
@@ -156,8 +193,13 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
    `migration_sandbox` database (output `postgresDatabase`) as the target — the recommended
    extensions are already installed there — select **Verify Extensions**, then **Next**.
 4. **Microsoft Foundry** — enter `foundryEndpoint` and the **deployment name** `gpt-5-mini`
-   (this is the model deployment, not the resource name), and authenticate with the **API key**
-   from the Azure OpenAI resource (**Keys and Endpoint**).
+   (this is the model deployment, not the resource name). Authenticate either way:
+   - **API key** (simplest) — copy it from the Azure OpenAI resource → **Keys and Endpoint**.
+     Reading the key requires Contributor/Owner on the resource, which you have as the deployer.
+   - **Microsoft Entra ID** — sign in with the **same account you deployed with**. The template
+     grants that account the **Cognitive Services OpenAI User** role on the resource, so
+     inference calls are authorized without a key. (A *different* account has no access and
+     will fail with `PermissionDenied` — use the API key, or grant it the role.)
 5. Select **Test Connection**, then **Create Migration Project**.
 
 ### 4. Run the conversion

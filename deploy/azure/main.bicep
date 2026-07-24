@@ -436,6 +436,20 @@ resource openaiRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   }
 }
 
+// Grant the interactive deployer the same role, so the person running the
+// Migration Wizard can authenticate to Foundry with their own Microsoft Entra
+// sign-in (not only the workstation's managed identity or an API key). Without
+// this, an Entra sign-in in the wizard fails with PermissionDenied because the
+// user account has no role on the Azure OpenAI resource.
+resource openaiRoleDeployer 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(openai.id, deployer().objectId, openAiUserRoleId)
+  scope: openai
+  properties: {
+    roleDefinitionId: openAiUserRoleId
+    principalId: deployer().objectId
+  }
+}
+
 output publicFqdn   string = pip.properties.dnsSettings.fqdn
 output vmResourceId string = vm.id
 output bastionRdpTunnelCommand string = 'az network bastion tunnel -n ${bastionName} -g ${resourceGroup().name} --target-resource-id ${vm.id} --resource-port 3389 --port 13389  # then RDP to localhost:13389'
