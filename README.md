@@ -87,6 +87,7 @@ az deployment group show -g oracle-bridge-rg -n <deployment-name> \
 | Oracle migration user | `MIG` + your deploy password | seeded, read-only |
 | PostgreSQL server | e.g. `orabridge-pg-xxxx.postgres.database.azure.com` | `postgresFqdn` |
 | PostgreSQL admin | `azureuser` + your deploy password | `postgresAdmin` |
+| PostgreSQL scratch database | `migration_sandbox` | `postgresDatabase` |
 | Foundry endpoint | e.g. `https://orabridge-oai-xxxx.openai.azure.com/` | `foundryEndpoint` |
 | Foundry deployment | `gpt-5-mini` | `foundryDeployment` |
 
@@ -110,8 +111,9 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
 2. **Connect to Oracle** — host `oraclePrivateIp`, port `1521`, service `FREEPDB1`, user
    `MIG` with your deploy password. Select **Load Schemas**, choose **HR**, then **Next**.
 3. **Scratch database** — connect to the PostgreSQL flexible server (`postgresFqdn`) with
-   admin `azureuser` and your deploy password (SSL mode `require`). Pick a target database,
-   select **Verify Extensions**, then **Next**.
+   admin `azureuser` and your deploy password (SSL mode `require`). Pick the pre-created
+   `migration_sandbox` database (output `postgresDatabase`) as the target — the recommended
+   extensions are already installed there — select **Verify Extensions**, then **Next**.
 4. **Microsoft Foundry** — enter `foundryEndpoint` and the **deployment name** `gpt-5-mini`
    (this is the model deployment, not the resource name), and authenticate with the **API key**
    from the Azure OpenAI resource (**Keys and Endpoint**).

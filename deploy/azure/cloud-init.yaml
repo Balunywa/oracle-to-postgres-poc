@@ -98,7 +98,7 @@ write_files:
       #!/usr/bin/env bash
       export PGHOST='__PG_FQDN__'
       export PGUSER='__PG_ADMIN__'
-      export PGDATABASE='postgres'
+      export PGDATABASE='__PG_DATABASE__'
       export PGPASSWORD='__ORACLE_PWD__'
       export PGSSLMODE='require'
 

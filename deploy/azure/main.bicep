@@ -45,6 +45,9 @@ param postgresSkuTier string = 'Burstable'
 @description('PostgreSQL major version.')
 param postgresVersion string = '16'
 
+@description('Name of the dedicated PostgreSQL database used as the migration scratch/sandbox target. Keeps converted objects out of the default \'postgres\' maintenance database.')
+param scratchDatabaseName string = 'migration_sandbox'
+
 @description('Name of the Azure OpenAI (Microsoft Foundry) model deployment used for the conversion.')
 param openAiDeploymentName string = 'gpt-5-mini'
 
@@ -94,11 +97,12 @@ var computerName = 'migration-ws'
 // The Oracle VM also installs the recommended PostgreSQL extensions into the
 // scratch database (it shares the admin password and can reach PG privately),
 // so the __PG_* tokens carry the target connection details.
-var oracleCloudInit = replace(replace(replace(replace(loadTextContent('cloud-init.yaml'),
+var oracleCloudInit = replace(replace(replace(replace(replace(loadTextContent('cloud-init.yaml'),
   '__ADMIN_USERNAME__', adminUsername),
   '__ORACLE_PWD__',     adminPassword),
   '__PG_FQDN__',        postgres.properties.fullyQualifiedDomainName),
-  '__PG_ADMIN__',       adminUsername)
+  '__PG_ADMIN__',       adminUsername),
+  '__PG_DATABASE__',    scratchDatabaseName)
 
 resource nsg 'Microsoft.Network/networkSecurityGroups@2023-11-01' = {
   name: nsgName
@@ -203,7 +207,7 @@ var setupScript = replace(replace(replace(replace(replace(replace(loadTextConten
   '__PG_FQDN__',            postgres.properties.fullyQualifiedDomainName),
   '__ORACLE_HOST__',        oracleNic.properties.ipConfigurations[0].properties.privateIPAddress),
   '__PG_ADMIN__',           adminUsername),
-  '__PG_DATABASE__',        'postgres')
+  '__PG_DATABASE__',        scratchDatabaseName)
 
 resource vm 'Microsoft.Compute/virtualMachines@2024-03-01' = {
   name: vmName
@@ -327,7 +331,7 @@ resource oracleVm 'Microsoft.Compute/virtualMachines@2024-03-01' = {
   }
   // Ensure the extension allow-list is in place before cloud-init runs
   // CREATE EXTENSION against the scratch database.
-  dependsOn: [ pgExtensions ]
+  dependsOn: [ pgExtensions, pgSandboxDb ]
 }
 
 // ---------------------------------------------------------------------------
@@ -382,6 +386,18 @@ resource pgExtensions 'Microsoft.DBforPostgreSQL/flexibleServers/configurations@
   }
 }
 
+// Dedicated scratch/sandbox database for the migration. The Migration Wizard
+// writes converted objects here (and the Oracle VM's cloud-init creates the
+// extensions in it), keeping the server's default 'postgres' database clean.
+resource pgSandboxDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2023-06-01-preview' = {
+  parent: postgres
+  name: scratchDatabaseName
+  properties: {
+    charset: 'UTF8'
+    collation: 'en_US.utf8'
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Microsoft Foundry: Azure OpenAI account + model deployment that powers the
 // AI conversion. The workstation's managed identity is granted key-less access.
@@ -427,5 +443,6 @@ output oraclePrivateIp string = oracleNic.properties.ipConfigurations[0].propert
 output oracleServiceName string = 'FREEPDB1'
 output postgresFqdn string = postgres.properties.fullyQualifiedDomainName
 output postgresAdmin string = adminUsername
+output postgresDatabase string = scratchDatabaseName
 output foundryEndpoint string = openai.properties.endpoint
 output foundryDeployment string = openAiDeploymentName
