@@ -1,7 +1,7 @@
 # Azure deployment — Oracle to PostgreSQL rapid migration POC
 
-This package provisions a **complete, self-contained rapid migration POC** inside a single
-virtual network:
+This package can provision a **complete, self-contained rapid migration POC** or only the
+components you select:
 
 - a **Windows Server 2022** workstation running desktop **Visual Studio Code + the Microsoft
   PostgreSQL extension**,
@@ -19,6 +19,11 @@ Wizard does the work; the POC only stands up an environment that has line of sig
 Oracle, PostgreSQL, and Azure OpenAI.
 
 ## What gets deployed
+
+The portal defaults to **Deploy all components**. Clear that option to choose any combination
+of the workstation, Oracle source, PostgreSQL target, and AI conversion components. Shared
+networking is created automatically when a selected component needs it; Azure Bastion is
+created only with the workstation.
 
 | Component | Resource | Notes |
 |---|---|---|
@@ -63,8 +68,8 @@ only way in is the Bastion tunnel. The login password is set at deploy time
 ## Deploy
 
 The simplest path is the one-click **Deploy to Azure** button, which opens the Azure
-portal with a form for the admin username and password, VM sizes, PostgreSQL tier, and the
-model deployment name. No local tooling is required.
+portal with a component selector followed by configuration for only the selected components.
+No local tooling is required.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2FcreateUiDefinition.json)
 
@@ -78,9 +83,24 @@ az deployment group create -g oracle-bridge-rg -f deploy/azure/main.bicep \
      adminPassword='<strong-password>'
 ```
 
+All four components are enabled by default for CLI deployments. To deploy a subset, set the
+unwanted component parameters to `false`. For example, this deploys only PostgreSQL and
+Azure OpenAI:
+
+```bash
+az deployment group create -g oracle-bridge-rg -f deploy/azure/main.bicep \
+  -p adminUsername=azureuser \
+     adminPassword='<strong-password>' \
+     deployWorkstation=false \
+     deployOracle=false
+```
+
+The component parameters are `deployWorkstation`, `deployOracle`, `deployPostgres`, and
+`deployOpenAi`.
+
 Outputs include `publicFqdn`, `vmResourceId`, `bastionRdpTunnelCommand`, `oraclePrivateIp`,
 `oracleServiceName`, `postgresFqdn`, `postgresAdmin`, `foundryEndpoint`, and
-`foundryDeployment`.
+`foundryDeployment`. Outputs for components that were not selected are empty strings.
 
 ## Connect
 

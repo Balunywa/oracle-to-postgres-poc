@@ -66,6 +66,18 @@ param openAiCapacity int = 10
 @description('DNS label prefix for the workstation public IP. Must be globally unique in the region.')
 param dnsLabelPrefix string = 'oracle-bridge-${uniqueString(resourceGroup().id)}'
 
+@description('Deploy the Windows migration workstation and Azure Bastion access.')
+param deployWorkstation bool = true
+
+@description('Deploy the Oracle source VM and sample HR schema.')
+param deployOracle bool = true
+
+@description('Deploy the Azure Database for PostgreSQL flexible server target.')
+param deployPostgres bool = true
+
+@description('Deploy the Azure OpenAI account and model used for AI-assisted conversion.')
+param deployOpenAi bool = true
+
 var suffix       = uniqueString(resourceGroup().id)
 var vnetName     = 'oracle-bridge-vnet'
 var subnetName   = 'default'
@@ -81,6 +93,7 @@ var oracleNicName = 'oracle-source-nic'
 var pgName       = 'orabridge-pg-${suffix}'
 var openaiName   = 'orabridge-oai-${suffix}'
 var pgDnsZoneName = '${pgName}.private.postgres.database.azure.com'
+var deployNetwork = deployWorkstation || deployOracle || deployPostgres
 
 // PostgreSQL compute SKU size, derived from the selected tier so the two always match.
 var pgSkuNameMap = {
@@ -92,6 +105,9 @@ var pgSkuName = pgSkuNameMap[postgresSkuTier]
 
 // Windows computer names must be <= 15 characters.
 var computerName = 'migration-ws'
+var postgresHost = deployPostgres ? postgres.properties.fullyQualifiedDomainName : ''
+var oracleHost = deployOracle ? oracleNic.properties.ipConfigurations[0].properties.privateIPAddress : ''
+var foundryEndpoint = deployOpenAi ? openai.properties.endpoint : ''
 
 // Cloud-init for the Oracle source VM, with deploy-time values substituted in.
 // The Oracle VM also installs the recommended PostgreSQL extensions into the
@@ -100,11 +116,11 @@ var computerName = 'migration-ws'
 var oracleCloudInit = replace(replace(replace(replace(replace(loadTextContent('cloud-init.yaml'),
   '__ADMIN_USERNAME__', adminUsername),
   '__ORACLE_PWD__',     adminPassword),
-  '__PG_FQDN__',        postgres.properties.fullyQualifiedDomainName),
+  '__PG_FQDN__',        postgresHost),
   '__PG_ADMIN__',       adminUsername),
   '__PG_DATABASE__',    scratchDatabaseName)
 
-resource nsg 'Microsoft.Network/networkSecurityGroups@2023-11-01' = {
+resource nsg 'Microsoft.Network/networkSecurityGroups@2023-11-01' = if (deployNetwork) {
   name: nsgName
   location: location
   properties: {
@@ -131,7 +147,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2023-11-01' = {
   }
 }
 
-resource vnet 'Microsoft.Network/virtualNetworks@2023-11-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2023-11-01' = if (deployNetwork) {
   name: vnetName
   location: location
   properties: {
@@ -171,7 +187,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-11-01' = {
   }
 }
 
-resource pip 'Microsoft.Network/publicIPAddresses@2023-11-01' = {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-11-01' = if (deployWorkstation) {
   name: pipName
   location: location
   sku: { name: 'Standard' }
@@ -181,7 +197,7 @@ resource pip 'Microsoft.Network/publicIPAddresses@2023-11-01' = {
   }
 }
 
-resource nic 'Microsoft.Network/networkInterfaces@2023-11-01' = {
+resource nic 'Microsoft.Network/networkInterfaces@2023-11-01' = if (deployWorkstation) {
   name: nicName
   location: location
   properties: {
@@ -202,14 +218,14 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-11-01' = {
 // mistyped hostnames). Referencing these properties makes the workstation
 // install wait until Foundry, PostgreSQL, and the Oracle NIC exist.
 var setupScript = replace(replace(replace(replace(replace(replace(loadTextContent('setup.ps1'),
-  '__FOUNDRY_ENDPOINT__',   openai.properties.endpoint),
+  '__FOUNDRY_ENDPOINT__',   foundryEndpoint),
   '__FOUNDRY_DEPLOYMENT__', openAiDeploymentName),
-  '__PG_FQDN__',            postgres.properties.fullyQualifiedDomainName),
-  '__ORACLE_HOST__',        oracleNic.properties.ipConfigurations[0].properties.privateIPAddress),
+  '__PG_FQDN__',            postgresHost),
+  '__ORACLE_HOST__',        oracleHost),
   '__PG_ADMIN__',           adminUsername),
   '__PG_DATABASE__',        scratchDatabaseName)
 
-resource vm 'Microsoft.Compute/virtualMachines@2024-03-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2024-03-01' = if (deployWorkstation) {
   name: vmName
   location: location
   identity: { type: 'SystemAssigned' }
@@ -243,7 +259,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-03-01' = {
 
 // Install VS Code + PostgreSQL extension + Oracle Instant Client + Azure CLI.
 // Run Command takes the PowerShell inline — no storage account, no public ports.
-resource setup 'Microsoft.Compute/virtualMachines/runCommands@2024-03-01' = {
+resource setup 'Microsoft.Compute/virtualMachines/runCommands@2024-03-01' = if (deployWorkstation) {
   parent: vm
   name: 'install-workstation'
   location: location
@@ -258,7 +274,7 @@ resource setup 'Microsoft.Compute/virtualMachines/runCommands@2024-03-01' = {
 // Standard SKU with tunneling enabled so `az network bastion tunnel` works.
 // disableCopyPaste is set false so clipboard copy/paste works in the browser
 // session (native RDP over the tunnel gets full clipboard from the client).
-resource bastionPip 'Microsoft.Network/publicIPAddresses@2023-11-01' = {
+resource bastionPip 'Microsoft.Network/publicIPAddresses@2023-11-01' = if (deployWorkstation) {
   name: '${bastionName}-pip'
   location: location
   sku: { name: 'Standard' }
@@ -267,7 +283,7 @@ resource bastionPip 'Microsoft.Network/publicIPAddresses@2023-11-01' = {
   }
 }
 
-resource bastion 'Microsoft.Network/bastionHosts@2023-11-01' = {
+resource bastion 'Microsoft.Network/bastionHosts@2023-11-01' = if (deployWorkstation) {
   name: bastionName
   location: location
   sku: { name: 'Standard' }
@@ -288,7 +304,7 @@ resource bastion 'Microsoft.Network/bastionHosts@2023-11-01' = {
 // Oracle source: Ubuntu VM running Oracle Database Free 23ai in a container,
 // seeded with a sample HR schema. Reachable privately on 1521 from the VNet.
 // ---------------------------------------------------------------------------
-resource oracleNic 'Microsoft.Network/networkInterfaces@2023-11-01' = {
+resource oracleNic 'Microsoft.Network/networkInterfaces@2023-11-01' = if (deployOracle) {
   name: oracleNicName
   location: location
   properties: {
@@ -302,7 +318,7 @@ resource oracleNic 'Microsoft.Network/networkInterfaces@2023-11-01' = {
   }
 }
 
-resource oracleVm 'Microsoft.Compute/virtualMachines@2024-03-01' = {
+resource oracleVm 'Microsoft.Compute/virtualMachines@2024-03-01' = if (deployOracle) {
   name: oracleVmName
   location: location
   properties: {
@@ -338,12 +354,12 @@ resource oracleVm 'Microsoft.Compute/virtualMachines@2024-03-01' = {
 // Scratch/target: Azure Database for PostgreSQL flexible server (private access
 // integrated into the VNet, reachable on 5432 from the workstation).
 // ---------------------------------------------------------------------------
-resource pgDns 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+resource pgDns 'Microsoft.Network/privateDnsZones@2020-06-01' = if (deployPostgres) {
   name: pgDnsZoneName
   location: 'global'
 }
 
-resource pgDnsLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
+resource pgDnsLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = if (deployPostgres) {
   parent: pgDns
   name: 'vnet-link'
   location: 'global'
@@ -353,7 +369,7 @@ resource pgDnsLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-0
   }
 }
 
-resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2023-06-01-preview' = {
+resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2023-06-01-preview' = if (deployPostgres) {
   name: pgName
   location: location
   sku: { name: pgSkuName, tier: postgresSkuTier }
@@ -377,7 +393,7 @@ resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2023-06-01-preview'
 // is control-plane only; the Oracle VM's cloud-init then creates them in the DB
 // (pg_cron is allow-listed but additionally needs shared_preload_libraries +
 // a restart, so it is not auto-created).
-resource pgExtensions 'Microsoft.DBforPostgreSQL/flexibleServers/configurations@2023-06-01-preview' = {
+resource pgExtensions 'Microsoft.DBforPostgreSQL/flexibleServers/configurations@2023-06-01-preview' = if (deployPostgres) {
   parent: postgres
   name: 'azure.extensions'
   properties: {
@@ -389,7 +405,7 @@ resource pgExtensions 'Microsoft.DBforPostgreSQL/flexibleServers/configurations@
 // Dedicated scratch/sandbox database for the migration. The Migration Wizard
 // writes converted objects here (and the Oracle VM's cloud-init creates the
 // extensions in it), keeping the server's default 'postgres' database clean.
-resource pgSandboxDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2023-06-01-preview' = {
+resource pgSandboxDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2023-06-01-preview' = if (deployPostgres) {
   parent: postgres
   name: scratchDatabaseName
   properties: {
@@ -402,7 +418,7 @@ resource pgSandboxDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2023-0
 // Microsoft Foundry: Azure OpenAI account + model deployment that powers the
 // AI conversion. The workstation's managed identity is granted key-less access.
 // ---------------------------------------------------------------------------
-resource openai 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
+resource openai 'Microsoft.CognitiveServices/accounts@2024-10-01' = if (deployOpenAi) {
   name: openaiName
   location: location
   kind: 'OpenAI'
@@ -413,7 +429,7 @@ resource openai 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   }
 }
 
-resource openaiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
+resource openaiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = if (deployOpenAi) {
   parent: openai
   name: openAiDeploymentName
   sku: { name: openAiSkuName, capacity: openAiCapacity }
@@ -426,7 +442,7 @@ resource openaiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024
 // Cognitive Services OpenAI User role, so the workstation can call Foundry
 // with its managed identity instead of an API key.
 var openAiUserRoleId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd')
-resource openaiRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource openaiRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployOpenAi && deployWorkstation) {
   name: guid(openai.id, vm.id, openAiUserRoleId)
   scope: openai
   properties: {
@@ -441,7 +457,7 @@ resource openaiRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
 // sign-in (not only the workstation's managed identity or an API key). Without
 // this, an Entra sign-in in the wizard fails with PermissionDenied because the
 // user account has no role on the Azure OpenAI resource.
-resource openaiRoleDeployer 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource openaiRoleDeployer 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployOpenAi) {
   name: guid(openai.id, deployer().objectId, openAiUserRoleId)
   scope: openai
   properties: {
@@ -450,13 +466,13 @@ resource openaiRoleDeployer 'Microsoft.Authorization/roleAssignments@2022-04-01'
   }
 }
 
-output publicFqdn   string = pip.properties.dnsSettings.fqdn
-output vmResourceId string = vm.id
-output bastionRdpTunnelCommand string = 'az network bastion tunnel -n ${bastionName} -g ${resourceGroup().name} --target-resource-id ${vm.id} --resource-port 3389 --port 13389  # then RDP to localhost:13389'
-output oraclePrivateIp string = oracleNic.properties.ipConfigurations[0].properties.privateIPAddress
-output oracleServiceName string = 'FREEPDB1'
-output postgresFqdn string = postgres.properties.fullyQualifiedDomainName
-output postgresAdmin string = adminUsername
-output postgresDatabase string = scratchDatabaseName
-output foundryEndpoint string = openai.properties.endpoint
-output foundryDeployment string = openAiDeploymentName
+output publicFqdn string = deployWorkstation ? pip.properties.dnsSettings.fqdn : ''
+output vmResourceId string = deployWorkstation ? vm.id : ''
+output bastionRdpTunnelCommand string = deployWorkstation ? 'az network bastion tunnel -n ${bastionName} -g ${resourceGroup().name} --target-resource-id ${vm.id} --resource-port 3389 --port 13389  # then RDP to localhost:13389' : ''
+output oraclePrivateIp string = oracleHost
+output oracleServiceName string = deployOracle ? 'FREEPDB1' : ''
+output postgresFqdn string = postgresHost
+output postgresAdmin string = deployPostgres ? adminUsername : ''
+output postgresDatabase string = deployPostgres ? scratchDatabaseName : ''
+output foundryEndpoint string = foundryEndpoint
+output foundryDeployment string = deployOpenAi ? openAiDeploymentName : ''

@@ -1,8 +1,8 @@
 # Oracle → Azure Database for PostgreSQL — Rapid Migration POC
 
-A **complete, self-contained rapid POC** for converting an Oracle schema to **Azure Database
-for PostgreSQL**, deployed by a single **Deploy to Azure** button. One click provisions
-everything inside a single virtual network:
+A configurable rapid POC for converting an Oracle schema to **Azure Database for PostgreSQL**,
+deployed by a single **Deploy to Azure** button. Choose the complete environment or only the
+components you need:
 
 - a **Windows workstation** running desktop **Visual Studio Code + the Microsoft PostgreSQL
   extension** (the tool that performs the AI conversion),
@@ -23,6 +23,21 @@ You can run the POC two ways:
 2. **Against your own dev/test Oracle** — once the built-in run succeeds, point the wizard at
    a real Oracle database instead. See [Use your own Oracle source](#use-your-own-oracle-source)
    for the prerequisites.
+
+## Logical architecture
+
+[![Logical architecture for the Oracle to Azure Database for PostgreSQL rapid migration POC](deploy/azure/media/schema-conversions-vm-workstation/logical-architecture.png)](deploy/azure/media/schema-conversions-vm-workstation/logical-architecture.png)
+
+The migration workstation runs Visual Studio Code and the PostgreSQL extension inside the
+virtual network. Users connect through Azure Bastion; direct inbound RDP is blocked. From the
+workstation, the conversion workflow reads Oracle metadata, uses Microsoft Foundry for
+AI-assisted conversion, and validates generated objects in the PostgreSQL scratch database.
+Customer-provided Oracle sources can replace the sample Oracle VM when the workstation has a
+network route to them.
+
+The diagram shows the complete environment. The deployment form can omit the workstation,
+sample Oracle source, PostgreSQL target, or AI conversion component; shared networking is
+created automatically when a selected component requires it.
 
 ## Prerequisites: resource providers
 
@@ -105,9 +120,9 @@ Register-AzResourceProvider -ProviderNamespace Microsoft.Network
 ## Deploy to Azure
 
 Click the button, sign in to the Azure portal, fill in the form (admin username and
-password, VM sizes, PostgreSQL tier, and model deployment name), and select
-**Review + create**. Everything — workstation, Oracle source, PostgreSQL target, and the
-Azure OpenAI deployment — is created for you. No CLI required.
+password), choose **Deploy all components** or select individual components, configure the
+visible component settings, and select **Review + create**. Shared networking is added
+automatically when required. No CLI is required.
 
 <p>
   <a href="https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2FcreateUiDefinition.json"><img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure" height="26"></a>

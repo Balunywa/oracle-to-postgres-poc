@@ -40,112 +40,128 @@
     ],
     "steps": [
       {
-        "name": "workstation",
-        "label": "Workstation",
+        "name": "components",
+        "label": "Components",
         "elements": [
           {
-            "name": "vmSize",
+            "name": "selected",
             "type": "Microsoft.Common.DropDown",
-            "label": "Workstation VM size",
-            "defaultValue": "Standard_D4s_v3 (4 vCPU, 16 GB)",
-            "toolTip": "Size of the Windows workstation VM. D4s_v3 is enough for Visual Studio Code and is broadly available. Pick a family you have vCPU quota for in this region; if the Dsv5 sizes fail preflight with a quota error, choose a Dsv3 or Dasv5 size instead.",
-            "constraints": {
-              "allowedValues": [
-                { "label": "Standard_D4s_v3 (4 vCPU, 16 GB)", "value": "Standard_D4s_v3" },
-                { "label": "Standard_D2s_v5 (2 vCPU, 8 GB)", "value": "Standard_D2s_v5" },
-                { "label": "Standard_D4s_v5 (4 vCPU, 16 GB)", "value": "Standard_D4s_v5" },
-                { "label": "Standard_D8s_v5 (8 vCPU, 32 GB)", "value": "Standard_D8s_v5" },
-                { "label": "Standard_D4as_v5 (4 vCPU, 16 GB, AMD)", "value": "Standard_D4as_v5" }
-              ],
-              "required": true
-            }
-          }
-        ]
-      },
-      {
-        "name": "source",
-        "label": "Oracle source",
-        "elements": [
-          {
-            "name": "oracleInfo",
-            "type": "Microsoft.Common.InfoBox",
-            "visible": true,
-            "options": {
-              "icon": "Info",
-              "text": "A Linux VM runs Oracle Database Free (23ai) in a container and is seeded with a sample HR schema on first boot. It is reachable privately on TCP 1521 inside the virtual network. Service name: FREEPDB1."
-            }
-          },
-          {
-            "name": "oracleVmSize",
-            "type": "Microsoft.Common.DropDown",
-            "label": "Oracle VM size",
-            "defaultValue": "Standard_D2s_v3 (2 vCPU, 8 GB)",
-            "toolTip": "Size of the Linux VM that hosts the Oracle source database container.",
-            "constraints": {
-              "allowedValues": [
-                { "label": "Standard_D2s_v3 (2 vCPU, 8 GB)", "value": "Standard_D2s_v3" },
-                { "label": "Standard_D4s_v3 (4 vCPU, 16 GB)", "value": "Standard_D4s_v3" },
-                { "label": "Standard_D2s_v5 (2 vCPU, 8 GB)", "value": "Standard_D2s_v5" }
-              ],
-              "required": true
-            }
-          }
-        ]
-      },
-      {
-        "name": "target",
-        "label": "PostgreSQL target",
-        "elements": [
-          {
-            "name": "pgInfo",
-            "type": "Microsoft.Common.InfoBox",
-            "visible": true,
-            "options": {
-              "icon": "Info",
-              "text": "An Azure Database for PostgreSQL flexible server is deployed with private access into a delegated subnet, reachable only from within the virtual network."
-            }
-          },
-          {
-            "name": "postgresSkuTier",
-            "type": "Microsoft.Common.DropDown",
-            "label": "PostgreSQL compute tier",
-            "defaultValue": "Burstable (Standard_B2s)",
-            "toolTip": "Compute tier for the flexible server. Burstable is the most economical choice for a lab.",
-            "constraints": {
-              "allowedValues": [
-                { "label": "Burstable (Standard_B2s)", "value": "Burstable" },
-                { "label": "General Purpose", "value": "GeneralPurpose" },
-                { "label": "Memory Optimized", "value": "MemoryOptimized" }
-              ],
-              "required": true
-            }
-          }
-        ]
-      },
-      {
-        "name": "conversion",
-        "label": "AI conversion",
-        "elements": [
-          {
-            "name": "aiInfo",
-            "type": "Microsoft.Common.InfoBox",
-            "visible": true,
-            "options": {
-              "icon": "Info",
-              "text": "An Azure OpenAI (Microsoft Foundry) account and model deployment are created for AI-assisted schema conversion. The workstation's managed identity is granted the Cognitive Services OpenAI User role, and the endpoint and deployment name are wired into the workstation automatically."
-            }
-          },
-          {
-            "name": "openAiDeploymentName",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Model deployment name",
-            "defaultValue": "gpt-5-mini",
-            "toolTip": "Name of the Azure OpenAI model deployment used for the conversion. The default deploys the gpt-5-mini model.",
+            "label": "Components to deploy",
+            "toolTip": "Select one or more components. Use Select all for the complete migration environment.",
+            "multiselect": true,
+            "selectAll": true,
+            "defaultValue": [
+              { "value": "workstation" },
+              { "value": "oracle" },
+              { "value": "postgres" },
+              { "value": "openAi" }
+            ],
             "constraints": {
               "required": true,
-              "regex": "^[a-zA-Z0-9._-]{2,64}$",
-              "validationMessage": "Use 2-64 characters: letters, numbers, dot, dash or underscore."
+              "allowedValues": [
+                { "label": "Workstation and Azure Bastion", "value": "workstation", "description": "Windows migration workstation with private RDP access through Azure Bastion." },
+                { "label": "Oracle source", "value": "oracle", "description": "Oracle Database Free 23ai with the sample HR schema." },
+                { "label": "PostgreSQL target", "value": "postgres", "description": "Azure Database for PostgreSQL flexible server and migration sandbox database." },
+                { "label": "AI conversion", "value": "openAi", "description": "Azure OpenAI account and model for AI-assisted schema conversion." }
+              ]
             }
+          }
+        ]
+      },
+      {
+        "name": "configuration",
+        "label": "Configuration",
+        "elements": [
+          {
+            "name": "workstation",
+            "type": "Microsoft.Common.Section",
+            "label": "Workstation",
+            "visible": "[contains(steps('components').selected, 'workstation')]",
+            "elements": [
+              {
+                "name": "vmSize",
+                "type": "Microsoft.Common.DropDown",
+                "label": "Workstation VM size",
+                "defaultValue": "Standard_D4s_v3 (4 vCPU, 16 GB)",
+                "toolTip": "Size of the Windows workstation VM. Pick a family you have vCPU quota for in this region.",
+                "constraints": {
+                  "allowedValues": [
+                    { "label": "Standard_D4s_v3 (4 vCPU, 16 GB)", "value": "Standard_D4s_v3" },
+                    { "label": "Standard_D2s_v5 (2 vCPU, 8 GB)", "value": "Standard_D2s_v5" },
+                    { "label": "Standard_D4s_v5 (4 vCPU, 16 GB)", "value": "Standard_D4s_v5" },
+                    { "label": "Standard_D8s_v5 (8 vCPU, 32 GB)", "value": "Standard_D8s_v5" },
+                    { "label": "Standard_D4as_v5 (4 vCPU, 16 GB, AMD)", "value": "Standard_D4as_v5" }
+                  ],
+                  "required": true
+                }
+              }
+            ]
+          },
+          {
+            "name": "oracle",
+            "type": "Microsoft.Common.Section",
+            "label": "Oracle source",
+            "visible": "[contains(steps('components').selected, 'oracle')]",
+            "elements": [
+              {
+                "name": "oracleVmSize",
+                "type": "Microsoft.Common.DropDown",
+                "label": "Oracle VM size",
+                "defaultValue": "Standard_D2s_v3 (2 vCPU, 8 GB)",
+                "toolTip": "Size of the Linux VM that hosts the Oracle source database container.",
+                "constraints": {
+                  "allowedValues": [
+                    { "label": "Standard_D2s_v3 (2 vCPU, 8 GB)", "value": "Standard_D2s_v3" },
+                    { "label": "Standard_D4s_v3 (4 vCPU, 16 GB)", "value": "Standard_D4s_v3" },
+                    { "label": "Standard_D2s_v5 (2 vCPU, 8 GB)", "value": "Standard_D2s_v5" }
+                  ],
+                  "required": true
+                }
+              }
+            ]
+          },
+          {
+            "name": "postgres",
+            "type": "Microsoft.Common.Section",
+            "label": "PostgreSQL target",
+            "visible": "[contains(steps('components').selected, 'postgres')]",
+            "elements": [
+              {
+                "name": "postgresSkuTier",
+                "type": "Microsoft.Common.DropDown",
+                "label": "PostgreSQL compute tier",
+                "defaultValue": "Burstable (Standard_B2s)",
+                "toolTip": "Compute tier for the flexible server. Burstable is the most economical choice for a lab.",
+                "constraints": {
+                  "allowedValues": [
+                    { "label": "Burstable (Standard_B2s)", "value": "Burstable" },
+                    { "label": "General Purpose", "value": "GeneralPurpose" },
+                    { "label": "Memory Optimized", "value": "MemoryOptimized" }
+                  ],
+                  "required": true
+                }
+              }
+            ]
+          },
+          {
+            "name": "openAi",
+            "type": "Microsoft.Common.Section",
+            "label": "AI conversion",
+            "visible": "[contains(steps('components').selected, 'openAi')]",
+            "elements": [
+              {
+                "name": "openAiDeploymentName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Model deployment name",
+                "defaultValue": "gpt-5-mini",
+                "toolTip": "Name of the Azure OpenAI model deployment used for the conversion.",
+                "constraints": {
+                  "required": true,
+                  "regex": "^[a-zA-Z0-9._-]{2,64}$",
+                  "validationMessage": "Use 2-64 characters: letters, numbers, dot, dash or underscore."
+                }
+              }
+            ]
           }
         ]
       }
@@ -154,10 +170,14 @@
       "location": "[location()]",
       "adminUsername": "[basics('adminUsername')]",
       "adminPassword": "[basics('adminPassword')]",
-      "vmSize": "[steps('workstation').vmSize]",
-      "oracleVmSize": "[steps('source').oracleVmSize]",
-      "postgresSkuTier": "[steps('target').postgresSkuTier]",
-      "openAiDeploymentName": "[steps('conversion').openAiDeploymentName]"
+      "deployWorkstation": "[contains(steps('components').selected, 'workstation')]",
+      "deployOracle": "[contains(steps('components').selected, 'oracle')]",
+      "deployPostgres": "[contains(steps('components').selected, 'postgres')]",
+      "deployOpenAi": "[contains(steps('components').selected, 'openAi')]",
+      "vmSize": "[steps('configuration').workstation.vmSize]",
+      "oracleVmSize": "[steps('configuration').oracle.oracleVmSize]",
+      "postgresSkuTier": "[steps('configuration').postgres.postgresSkuTier]",
+      "openAiDeploymentName": "[steps('configuration').openAi.openAiDeploymentName]"
     }
   }
 }

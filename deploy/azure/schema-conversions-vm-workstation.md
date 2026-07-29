@@ -46,6 +46,8 @@ database, and Microsoft Foundry, use the standard local workflow instead. See
 
 ## Architecture
 
+[![Logical architecture showing Azure Bastion, the migration workstation, Oracle source, PostgreSQL target, and Microsoft Foundry](media/schema-conversions-vm-workstation/logical-architecture.png)](media/schema-conversions-vm-workstation/logical-architecture.png)
+
 The workstation is a virtual machine that runs Visual Studio Code inside the
 virtual network that the source Oracle database trusts. The conversion components
 are unchanged from the standard flow:
@@ -54,6 +56,12 @@ are unchanged from the standard flow:
 - **Workstation virtual machine**: An Azure virtual machine inside the virtual network. It runs Visual Studio Code with the PostgreSQL extension and, when required, Oracle Instant Client for thick client mode.
 - **Azure Database for PostgreSQL flexible server**: Hosts the scratch schemas the tool uses to validate converted objects, and the production target.
 - **Microsoft Foundry**: Provides the language models that power AI-driven schema transformation, reached over a private endpoint.
+
+The supplied deployment uses Azure Bastion for RDP and blocks direct inbound RDP
+to the workstation. The workstation's public IP supports its required outbound
+downloads; it isn't the user access path. When you use a customer-provided Oracle
+source, route the workstation to that source through virtual network peering, VPN,
+ExpressRoute, or an explicitly secured endpoint.
 
 The workstation needs a network path to each endpoint. Peer or connect its
 virtual network with the network that holds Oracle, and use a private endpoint or

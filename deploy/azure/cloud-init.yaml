@@ -102,6 +102,11 @@ write_files:
       export PGPASSWORD='__ORACLE_PWD__'
       export PGSSLMODE='require'
 
+      if [ -z "$PGHOST" ]; then
+        prog "PG extensions: PostgreSQL component not selected; skipping."
+        exit 0
+      fi
+
       psql_c() { psql -w -tAc "$1" 2>&1; }
 
       # pg_cron is intentionally omitted: it also needs shared_preload_libraries
