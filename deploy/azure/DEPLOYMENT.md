@@ -166,6 +166,19 @@ Outputs include `publicFqdn`, `vmResourceId`, `bastionRdpTunnelCommand`, `oracle
 Portal labels and example VM details in the image can differ from your deployment, but the
 **Connect** > **Connect via Bastion** path is the same.
 
+### Complete first-logon setup
+
+1. Allow cookies and pop-ups for the Azure portal so the Bastion session can open in a new
+  browser tab.
+1. After signing in, wait while the first-logon command installs the PostgreSQL, GitHub Copilot,
+  and GitHub Copilot Chat extensions for your user account. Don't close the command window.
+1. Continue when the command finishes. The deployment-time setup has already installed Visual
+  Studio Code, Oracle Instant Client, and Azure CLI system-wide.
+1. If an extension is missing, use the manual installation commands in
+  [What's installed on the workstation](../../README.md#whats-installed-on-the-workstation).
+
+[![Browser-based Azure Bastion session showing the first-logon command installing Visual Studio Code extensions](media/deployment-guide/07-complete-workstation-setup.png)](media/deployment-guide/07-complete-workstation-setup.png)
+
 ### Connect with a native RDP client
 
 To use a local RDP client instead of the browser, open a Bastion tunnel:

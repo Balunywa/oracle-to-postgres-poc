@@ -162,6 +162,11 @@ deployment blocks direct public RDP; use Bastion or the documented Bastion tunne
 
 [![Azure portal migration-workstation page with Connect via Bastion identified](deploy/azure/media/deployment-guide/06-connect-via-bastion.png)](deploy/azure/media/deployment-guide/06-connect-via-bastion.png)
 
+On first logon, keep the setup command open while it installs the per-user Visual Studio Code
+extensions. For browser-based Bastion, allow cookies and pop-ups for the Azure portal.
+
+[![Azure Bastion workstation session showing first-logon extension installation](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)
+
 ## What's installed on the workstation
 
 The workstation is a Windows Server 2022 VM provisioned at deploy time by
