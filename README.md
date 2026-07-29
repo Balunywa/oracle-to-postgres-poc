@@ -152,6 +152,11 @@ For the complete portal procedure, see [Deploy the environment](deploy/azure/DEP
 After the deployment finishes, see [Connect to the workstation](deploy/azure/DEPLOYMENT.md#connect)
 to open the Azure Bastion RDP tunnel and start the Migration Wizard.
 
+First, open the resource group and verify that the resources for your selected components were
+created. If you deployed the workstation, open **migration-workstation** next.
+
+[![Azure portal resource group Overview page with deployed resources and migration-workstation identified](deploy/azure/media/deployment-guide/05-validate-deployed-resources.png)](deploy/azure/media/deployment-guide/05-validate-deployed-resources.png)
+
 ## What's installed on the workstation
 
 The workstation is a Windows Server 2022 VM provisioned at deploy time by

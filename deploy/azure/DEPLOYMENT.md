@@ -140,6 +140,17 @@ Outputs include `publicFqdn`, `vmResourceId`, `bastionRdpTunnelCommand`, `oracle
 `oracleServiceName`, `postgresFqdn`, `postgresAdmin`, `foundryEndpoint`, and
 `foundryDeployment`. Outputs for components that were not selected are empty strings.
 
+### Validate deployed resources
+
+1. After the deployment succeeds, open its resource group in the Azure portal.
+1. On **Overview**, review **Resources** and confirm that the resources for each selected
+  component were created successfully. A partial deployment contains fewer resources than
+  the complete environment shown in the image.
+1. If you deployed the workstation component, select **migration-workstation** to open the
+  virtual machine and continue with the connection steps.
+
+[![Azure portal resource group Overview page showing deployed resources and the migration-workstation virtual machine selection](media/deployment-guide/05-validate-deployed-resources.png)](media/deployment-guide/05-validate-deployed-resources.png)
+
 ## Connect
 
 ```bash
