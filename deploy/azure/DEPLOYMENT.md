@@ -153,15 +153,32 @@ Outputs include `publicFqdn`, `vmResourceId`, `bastionRdpTunnelCommand`, `oracle
 
 ## Connect
 
+### Connect in the Azure portal
+
+1. Open the **migration-workstation** virtual machine in the Azure portal.
+1. Select **Connect**, and then select **Connect via Bastion**. Don't use the public IP option;
+  the deployment doesn't allow direct inbound RDP.
+1. On the Bastion page, enter the administrator username and password from the deployment,
+  and then connect to open the workstation desktop in your browser.
+
+[![Azure portal migration-workstation page showing the Connect menu and Connect via Bastion selection](media/deployment-guide/06-connect-via-bastion.png)](media/deployment-guide/06-connect-via-bastion.png)
+
+Portal labels and example VM details in the image can differ from your deployment, but the
+**Connect** > **Connect via Bastion** path is the same.
+
+### Connect with a native RDP client
+
+To use a local RDP client instead of the browser, open a Bastion tunnel:
+
 ```bash
 # Open an RDP tunnel through Bastion, then RDP to localhost:13389:
 az network bastion tunnel -n oracle-bridge-bastion -g oracle-bridge-rg \
   --target-resource-id <vmResourceId> --resource-port 3389 --port 13389
 ```
 
-RDP to `localhost:13389`, sign in as the workstation user with the password you set,
-open Visual Studio Code, run `az login`, then open the **PostgreSQL** extension and start
-the **Migration Wizard**.
+RDP to `localhost:13389` and sign in with the administrator credentials from the deployment.
+After connecting by either method, open Visual Studio Code, run `az login`, then open the
+**PostgreSQL** extension and start the **Migration Wizard**.
 
 Use the deployment outputs to fill in the connections. Retrieve them with:
 

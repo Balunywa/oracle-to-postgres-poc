@@ -157,6 +157,11 @@ created. If you deployed the workstation, open **migration-workstation** next.
 
 [![Azure portal resource group Overview page with deployed resources and migration-workstation identified](deploy/azure/media/deployment-guide/05-validate-deployed-resources.png)](deploy/azure/media/deployment-guide/05-validate-deployed-resources.png)
 
+On the workstation page, select **Connect** > **Connect via Bastion** for browser access. The
+deployment blocks direct public RDP; use Bastion or the documented Bastion tunnel instead.
+
+[![Azure portal migration-workstation page with Connect via Bastion identified](deploy/azure/media/deployment-guide/06-connect-via-bastion.png)](deploy/azure/media/deployment-guide/06-connect-via-bastion.png)
+
 ## What's installed on the workstation
 
 The workstation is a Windows Server 2022 VM provisioned at deploy time by
