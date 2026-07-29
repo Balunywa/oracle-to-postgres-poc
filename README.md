@@ -137,6 +137,16 @@ choose the components to deploy.
 
 [![Azure portal Custom deployment page with project details and administrator credential fields identified](deploy/azure/media/deployment-guide/01-configure-project-details.png)](deploy/azure/media/deployment-guide/01-configure-project-details.png)
 
+On **Components**, keep **Select all** for the full POC, or clear it and choose one or more
+individual components. Then select **Next** to configure your selection.
+
+[![Azure portal Components tab with Select all and the four deployable components identified](deploy/azure/media/deployment-guide/02-select-components.png)](deploy/azure/media/deployment-guide/02-select-components.png)
+
+After configuration, use **Review + create** to confirm the project details, selected
+components, and component settings. When validation succeeds, select **Create**.
+
+[![Azure portal Review and create page with deployment details and the Create action identified](deploy/azure/media/deployment-guide/04-review-and-create.png)](deploy/azure/media/deployment-guide/04-review-and-create.png)
+
 For the complete portal procedure, see [Deploy the environment](deploy/azure/DEPLOYMENT.md#deploy).
 
 After the deployment finishes, see [Connect to the workstation](deploy/azure/DEPLOYMENT.md#connect)

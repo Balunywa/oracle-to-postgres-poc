@@ -88,6 +88,29 @@ No local tooling is required.
 
 [![Azure portal Custom deployment page showing subscription, resource group, region, administrator username, password, and Next selections](media/deployment-guide/01-configure-project-details.png)](media/deployment-guide/01-configure-project-details.png)
 
+### Select components
+
+1. On the **Components** tab, open **Components to deploy**.
+1. Keep **Select all** selected for the complete end-to-end POC. This option deploys the
+  workstation and Azure Bastion, Oracle source, PostgreSQL target, and AI conversion resources.
+1. For a partial environment, clear **Select all**, and then select one or more individual
+  components. At least one component is required.
+1. Select **Next** to configure the selected components.
+
+[![Azure portal Components tab showing Select all and individual workstation, Oracle, PostgreSQL, and AI conversion component selections](media/deployment-guide/02-select-components.png)](media/deployment-guide/02-select-components.png)
+
+### Review and create
+
+1. On **Configuration**, review the settings shown for the components you selected, and then
+  select **Review + create**.
+1. Confirm the subscription, resource group, region, and administrator details under **Basics**.
+1. Confirm that **Components** lists only the services you intend to deploy.
+1. Review the VM sizes, PostgreSQL tier, and model deployment name under **Configuration**.
+1. After validation succeeds, select **Create**. Select **Previous** first if you need to change
+  any setting.
+
+[![Azure portal Review and create page showing the Basics, Components, Configuration, Previous, and Create areas](media/deployment-guide/04-review-and-create.png)](media/deployment-guide/04-review-and-create.png)
+
 To deploy from the command line instead:
 
 ```bash
