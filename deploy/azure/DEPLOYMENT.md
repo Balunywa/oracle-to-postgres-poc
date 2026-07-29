@@ -73,6 +73,21 @@ No local tooling is required.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2FcreateUiDefinition.json)
 
+### Configure project details
+
+1. Select the Azure subscription where you want to deploy the resources. Your account needs
+  permission to create resources and role assignments.
+1. Create a resource group, or select an existing resource group for the deployment.
+1. Select a region that supports the VM sizes, Azure Database for PostgreSQL, and Azure OpenAI
+  model used by the components you plan to deploy.
+1. Enter the administrator username used by the selected workstation, Oracle source, and
+  PostgreSQL target components.
+1. Enter a password that meets the displayed complexity requirements.
+1. Confirm the password.
+1. Select **Next** to choose the components to deploy.
+
+[![Azure portal Custom deployment page showing subscription, resource group, region, administrator username, password, and Next selections](media/deployment-guide/01-configure-project-details.png)](media/deployment-guide/01-configure-project-details.png)
+
 To deploy from the command line instead:
 
 ```bash

@@ -131,6 +131,14 @@ automatically when required. No CLI is required.
   <a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FBalunywa%2Foracle-to-postgres-poc%2Fmain%2Fdeploy%2Fazure%2Fazuredeploy.json"><img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg" alt="Visualize" height="26"></a>
 </p>
 
+Start on **Project details**: select the subscription, create or select a resource group,
+choose a supported region, and enter the administrator credentials. Then select **Next** to
+choose the components to deploy.
+
+[![Azure portal Custom deployment page with project details and administrator credential fields identified](deploy/azure/media/deployment-guide/01-configure-project-details.png)](deploy/azure/media/deployment-guide/01-configure-project-details.png)
+
+For the complete portal procedure, see [Deploy the environment](deploy/azure/DEPLOYMENT.md#deploy).
+
 After the deployment finishes, see [Connect to the workstation](deploy/azure/DEPLOYMENT.md#connect)
 to open the Azure Bastion RDP tunnel and start the Migration Wizard.
 
