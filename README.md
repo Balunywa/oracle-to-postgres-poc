@@ -249,6 +249,11 @@ environment variables `FOUNDRY_ENDPOINT` and `FOUNDRY_DEPLOYMENT`.
    and Copilot Chat finish installing.
 3. Sign in to **GitHub Copilot** and to the **PostgreSQL extension** (Microsoft Entra ID).
    This is the one sign-in the template can't do for you.
+4. In the PostgreSQL extension, select **Add Connection**. Use `postgresFqdn`, port `5432`,
+  `postgresDatabase`, SSL mode `require`, `postgresAdmin`, and your deployment password.
+  Don't save the password on a shared or long-lived workstation.
+
+[![Visual Studio Code PostgreSQL extension showing the PostgreSQL target connection workflow](deploy/azure/media/deployment-guide/11-connect-postgresql-target.png)](deploy/azure/media/deployment-guide/11-connect-postgresql-target.png)
 
 ### 3. Create the migration project
 

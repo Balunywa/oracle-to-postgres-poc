@@ -218,6 +218,20 @@ Portal labels and example VM details in the image can differ from your deploymen
 
 [![Windows Start menu showing Visual Studio Code and the initial welcome screen close action](media/deployment-guide/10-open-visual-studio-code.png)](media/deployment-guide/10-open-visual-studio-code.png)
 
+### Connect to the PostgreSQL target
+
+1. In Visual Studio Code, open the **PostgreSQL** extension.
+1. Under **Connections**, select **Add Connection**.
+1. Use the PostgreSQL values from **connection-info.txt**: server name, port `5432`, database
+  name, and SSL mode `require`.
+1. Select **Password** authentication, and enter the administrator username and deployment
+  password. Don't invent or substitute credentials.
+1. Clear **Save password** on shared or long-lived workstations. For this disposable POC, save
+  it only if your credential-handling policy permits local storage.
+1. Test and save the connection.
+
+[![Visual Studio Code PostgreSQL extension showing Add Connection and the PostgreSQL target connection fields](media/deployment-guide/11-connect-postgresql-target.png)](media/deployment-guide/11-connect-postgresql-target.png)
+
 ### Connect with a native RDP client
 
 To use a local RDP client instead of the browser, open a Bastion tunnel:
