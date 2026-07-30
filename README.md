@@ -178,6 +178,12 @@ keys, or tokens.
 
 [![Windows workstation showing the connection-info file used during migration setup](deploy/azure/media/deployment-guide/09-review-connection-info.png)](deploy/azure/media/deployment-guide/09-review-connection-info.png)
 
+Open the Windows **Start** menu, launch **Visual Studio Code**, and confirm the PostgreSQL
+extension is installed before starting the Migration Wizard. If the initial GitHub sign-in
+welcome screen appears, close it and authenticate later when the workflow requests it.
+
+[![Windows Start menu with Visual Studio Code and its initial welcome screen close action identified](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)
+
 ## What's installed on the workstation
 
 The workstation is a Windows Server 2022 VM provisioned at deploy time by

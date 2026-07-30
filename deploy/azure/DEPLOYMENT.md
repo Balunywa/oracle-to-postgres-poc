@@ -205,6 +205,19 @@ Portal labels and example VM details in the image can differ from your deploymen
 
 [![Windows workstation desktop showing connection-info.txt with PostgreSQL, Oracle, and Foundry connection sections](media/deployment-guide/09-review-connection-info.png)](media/deployment-guide/09-review-connection-info.png)
 
+### Open Visual Studio Code
+
+1. Open the Windows **Start** menu.
+1. Select **Visual Studio Code**.
+1. If the **Welcome to VS Code** GitHub sign-in screen opens, close it with the **X** in its
+  upper-right corner. Complete account sign-in later from the relevant extension.
+1. Open **Extensions** and confirm that **PostgreSQL** by Microsoft is installed. Also confirm
+  the GitHub Copilot extensions if you plan to use assisted review.
+1. Open the PostgreSQL extension to start the Migration Wizard, and sign in when the workflow
+  requests authentication.
+
+[![Windows Start menu showing Visual Studio Code and the initial welcome screen close action](media/deployment-guide/10-open-visual-studio-code.png)](media/deployment-guide/10-open-visual-studio-code.png)
+
 ### Connect with a native RDP client
 
 To use a local RDP client instead of the browser, open a Bastion tunnel:
