@@ -26,6 +26,15 @@ Prog 'Provisioning the schema conversion workstation...'
 Prog 'Ensuring RDP clipboard redirection is enabled...'
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name 'fDisableClip' -Value 0 -Type DWord -Force
 
+# --- Suppress the Microsoft Edge first-run experience ----------------------
+# On a fresh VM, Edge opens a welcome/import ("Your Google data and services")
+# screen that swallows the GitHub Copilot sign-in redirect. This policy skips
+# the whole first-run flow so the OAuth/device pages load directly.
+Prog 'Disabling the Microsoft Edge first-run experience...'
+$edgePolicy = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'
+New-Item -Path $edgePolicy -Force | Out-Null
+Set-ItemProperty -Path $edgePolicy -Name 'HideFirstRunExperience' -Value 1 -Type DWord -Force
+
 # --- Visual Studio Code (desktop, system-wide) -----------------------------
 Prog '[1/4] Installing Visual Studio Code...'
 $vscode = "$env:TEMP\vscode-setup.exe"
