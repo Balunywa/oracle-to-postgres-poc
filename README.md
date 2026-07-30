@@ -156,6 +156,12 @@ components were created. If you deployed the workstation, open **migration-works
 
 [![Azure portal resource group Overview page with deployed resources and migration-workstation identified](deploy/azure/media/deployment-guide/04-validate-deployed-resources.png)](deploy/azure/media/deployment-guide/04-validate-deployed-resources.png)
 
+> **If a resource looks unreachable, check it isn't stopped.** Some subscriptions have
+> governance or auto-shutdown policies that stop compute to save cost. Before you connect,
+> confirm these are **Running** in the portal and start any that were stopped:
+> the **PostgreSQL flexible server**, the **migration-workstation** VM, and the
+> **oracle-source-vm**.
+
 On the workstation page, select **Connect** > **Connect via Bastion** for browser access. The
 deployment blocks direct public RDP; use Bastion or the documented Bastion tunnel instead.
 
