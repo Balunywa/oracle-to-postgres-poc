@@ -165,31 +165,6 @@ deployment blocks direct public RDP; use Bastion or the documented Bastion tunne
 
 [![Azure portal migration-workstation page with Connect via Bastion identified](deploy/azure/media/deployment-guide/06-connect-via-bastion.png)](deploy/azure/media/deployment-guide/06-connect-via-bastion.png)
 
-On first logon, keep the setup command open while it installs the per-user Visual Studio Code
-extensions. For browser-based Bastion, allow cookies and pop-ups for the Azure portal.
-
-[![Azure Bastion workstation session showing first-logon extension installation](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)
-
-Dismiss the Windows first-logon prompts and close Server Manager pop-ups. Network discovery
-isn't required for this workflow, so select **No** unless your organization requires it.
-
-[![Windows Server desktop showing network discovery and Server Manager first-logon prompts](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)
-
-Open **connection-info.txt** from the public desktop and keep it available for the Migration
-Wizard. It contains connection metadata for the selected components, but no passwords, API
-keys, or tokens.
-
-[![Windows workstation showing the connection-info file used during migration setup](deploy/azure/media/deployment-guide/09-review-connection-info.png)](deploy/azure/media/deployment-guide/09-review-connection-info.png)
-
-Open the Windows **Start** menu, launch **Visual Studio Code**, and confirm the PostgreSQL
-extension is installed before starting the Migration Wizard. If the initial GitHub sign-in
-welcome screen appears, close it and authenticate later when the workflow requests it.
-
-[![Windows Start menu with Visual Studio Code and its initial welcome screen close action identified](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)
-
-For browser and native RDP connection details, see the full
-[connection and workstation setup walkthrough](deploy/azure/DEPLOYMENT.md#connect).
-
 ## What's installed on the workstation
 
 The workstation is a Windows Server 2022 VM provisioned at deploy time by
@@ -215,6 +190,31 @@ The workstation is a Windows Server 2022 VM provisioned at deploy time by
 > written *before* that logon, so it confirms the deploy-time steps finished — not that the
 > extensions installed. If any are missing, run the `code --install-extension` commands from
 > [deploy/azure/setup.ps1](deploy/azure/setup.ps1) manually in a terminal.
+
+On first logon, keep the setup command open while it installs the per-user Visual Studio Code
+extensions. For browser-based Bastion, allow cookies and pop-ups for the Azure portal.
+
+[![Azure Bastion workstation session showing first-logon extension installation](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)
+
+Dismiss the Windows first-logon prompts and close Server Manager pop-ups. Network discovery
+isn't required for this workflow, so select **No** unless your organization requires it.
+
+[![Windows Server desktop showing network discovery and Server Manager first-logon prompts](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)
+
+Open **connection-info.txt** from the public desktop and keep it available for the Migration
+Wizard. It contains connection metadata for the selected components, but no passwords, API
+keys, or tokens.
+
+[![Windows workstation showing the connection-info file used during migration setup](deploy/azure/media/deployment-guide/09-review-connection-info.png)](deploy/azure/media/deployment-guide/09-review-connection-info.png)
+
+Open the Windows **Start** menu, launch **Visual Studio Code**, and confirm the PostgreSQL
+extension is installed before starting the Migration Wizard. If the initial GitHub sign-in
+welcome screen appears, close it and authenticate later when the workflow requests it.
+
+[![Windows Start menu with Visual Studio Code and its initial welcome screen close action identified](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)
+
+For browser and native RDP connection details, see the full
+[connection and workstation setup walkthrough](deploy/azure/DEPLOYMENT.md#connect).
 
 ## After deployment: run the schema conversion
 
