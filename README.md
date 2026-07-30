@@ -216,30 +216,22 @@ welcome screen appears, close it and authenticate later when the workflow reques
 For browser and native RDP connection details, see the full
 [connection and workstation setup walkthrough](deploy/azure/DEPLOYMENT.md#connect).
 
-## After deployment: run the schema conversion
+## Run the schema conversion
 
-The template stands up the whole environment, but the conversion itself is an **interactive**
-task you run inside VS Code on the workstation — the Migration Wizard and GitHub Copilot
-can't run headlessly. Follow these steps once the deployment finishes. Every value the wizard
-asks for is on the workstation desktop in **connection-info.txt** (see the connection step
-above); the passwords are the deploy password you set.
+The conversion runs inside VS Code on the workstation — the Migration Wizard and GitHub
+Copilot can't run headlessly. Every value the wizard asks for is on the workstation desktop
+in **connection-info.txt**; the passwords are the deploy password you set.
 
-### 1. Connect and sign in
+### 1. Connect to the target and open Migrations
 
-1. Open the Bastion RDP tunnel (the `bastionRdpTunnelCommand` output) and RDP to
-   `localhost:13389` with your admin username and password.
-2. Launch **Visual Studio Code**. On first logon the PostgreSQL extension, GitHub Copilot,
-   and Copilot Chat finish installing.
-3. Sign in to **GitHub Copilot** and to the **PostgreSQL extension** (Microsoft Entra ID).
-   This is the one sign-in the template can't do for you.
-4. In the PostgreSQL extension, select **Add Connection**. Use `postgresFqdn`, port `5432`,
-  `postgresDatabase`, SSL mode `require`, `postgresAdmin`, and your deployment password.
-  Don't save the password on a shared or long-lived workstation.
+In the PostgreSQL extension, select **Add Connection**. Use `postgresFqdn`, port `5432`,
+`postgresDatabase`, SSL mode `require`, `postgresAdmin`, and your deployment password.
+Don't save the password on a shared or long-lived workstation.
 
 [![Visual Studio Code PostgreSQL extension showing the PostgreSQL target connection workflow](deploy/azure/media/deployment-guide/11-connect-postgresql-target.png)](deploy/azure/media/deployment-guide/11-connect-postgresql-target.png)
 
-5. Confirm the server appears under **Connections**, open **Migrations**, and choose a writable
-  project folder. Desktop is used for this POC, but any suitable folder works.
+Confirm the server appears under **Connections**, open **Migrations**, and choose a writable
+project folder. Desktop is used for this POC, but any suitable folder works.
 
 [![Visual Studio Code PostgreSQL extension showing the connected server and migration project folder workflow](deploy/azure/media/deployment-guide/12-open-migrations-workspace.png)](deploy/azure/media/deployment-guide/12-open-migrations-workspace.png)
 
