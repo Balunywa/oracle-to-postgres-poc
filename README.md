@@ -244,7 +244,11 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
   [![Visual Studio Code Migration Project Setup showing the project creation and naming workflow](deploy/azure/media/deployment-guide/13-create-migration-project.png)](deploy/azure/media/deployment-guide/13-create-migration-project.png)
 
 2. **Connect to Oracle** — host `oraclePrivateIp`, port `1521`, service `FREEPDB1`, user
-   `MIG` with your deploy password. Select **Load Schemas**, choose **HR**, then **Next**.
+   `MIG` with your deploy password. Copy these values from the **connection-info** Notepad
+   file on the workstation desktop. Select **Load Schemas**, choose **HR**, then **Next**.
+
+  [![Visual Studio Code Migration Project Setup Connect to Oracle page with Oracle connection fields, Load Schemas, and HR schema selection identified](deploy/azure/media/deployment-guide/14-connect-to-oracle.png)](deploy/azure/media/deployment-guide/14-connect-to-oracle.png)
+
 3. **Scratch database** — connect to the PostgreSQL flexible server (`postgresFqdn`) with
    admin `azureuser` and your deploy password (SSL mode `require`). Pick the pre-created
    `migration_sandbox` database (output `postgresDatabase`) as the target — the recommended
