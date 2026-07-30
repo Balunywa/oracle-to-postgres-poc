@@ -189,6 +189,22 @@ Portal labels and example VM details in the image can differ from your deploymen
 
 [![Windows Server first-logon desktop showing the network discovery prompt and Server Manager pop-up close action](media/deployment-guide/08-dismiss-first-logon-prompts.png)](media/deployment-guide/08-dismiss-first-logon-prompts.png)
 
+### Review connection details
+
+1. On the public desktop, open **connection-info.txt**.
+1. Keep the file available while you configure the Migration Wizard. It lists the deployed
+  PostgreSQL host and database, Oracle private address and service, and Foundry endpoint and
+  model deployment name.
+1. Empty values indicate that the corresponding component wasn't selected or wasn't available
+  when workstation setup ran. You can retrieve current values from the deployment outputs.
+
+> [!NOTE]
+> The file doesn't store passwords, API keys, or tokens. Use the deployment password for the
+> lab database accounts and authenticate to Foundry with Microsoft Entra ID or a separately
+> retrieved API key. Some labels in the image are illustrative and can differ from the file.
+
+[![Windows workstation desktop showing connection-info.txt with PostgreSQL, Oracle, and Foundry connection sections](media/deployment-guide/09-review-connection-info.png)](media/deployment-guide/09-review-connection-info.png)
+
 ### Connect with a native RDP client
 
 To use a local RDP client instead of the browser, open a Bastion tunnel:

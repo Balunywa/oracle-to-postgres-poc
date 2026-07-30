@@ -172,6 +172,12 @@ isn't required for this workflow, so select **No** unless your organization requ
 
 [![Windows Server desktop showing network discovery and Server Manager first-logon prompts](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)
 
+Open **connection-info.txt** from the public desktop and keep it available for the Migration
+Wizard. It contains connection metadata for the selected components, but no passwords, API
+keys, or tokens.
+
+[![Windows workstation showing the connection-info file used during migration setup](deploy/azure/media/deployment-guide/09-review-connection-info.png)](deploy/azure/media/deployment-guide/09-review-connection-info.png)
+
 ## What's installed on the workstation
 
 The workstation is a Windows Server 2022 VM provisioned at deploy time by
