@@ -15,6 +15,12 @@ Everything is network-isolated and reached privately over **Azure Bastion**. No 
 conversion logic runs here — the PostgreSQL extension does the work; this repo just stands
 up the whole environment for you.
 
+> **Scope: schema only, not data.** This POC converts and deploys the **schema** — tables,
+> views, constraints, types, and other DDL objects. It does **not** copy table **rows** (the
+> conversion only reads the Oracle source). The deployed PostgreSQL tables are empty until you
+> load data with a separate tool such as **Azure Database Migration Service**, **`ora2pg`**, or
+> **`pgloader`**.
+
 You can run the POC two ways:
 
 1. **Against the built-in Oracle source** (recommended first) — validates the workstation,
@@ -343,6 +349,10 @@ To deploy it to the PostgreSQL target:
 4. Refresh the explorer and confirm the schema objects now exist **under `migration_sandbox`**.
 
 [![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)
+
+These tables are **empty** — this POC deploys the schema, not the data. To also move the rows,
+run a separate data-migration tool (**Azure DMS**, **`ora2pg`**, or **`pgloader`**) against the
+new PostgreSQL objects.
 
 > **Watch the active database.** A flexible-server connection defaults to `postgres`, so if you
 > run `deploy.sql` without selecting `migration_sandbox` the schema lands in the wrong database.
