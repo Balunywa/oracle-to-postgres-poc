@@ -301,11 +301,14 @@ stages, and wait for **Migration Complete**. Select **View Migration Report**.
 
 ### 5. Produce and deploy `deploy.sql`
 
-The consolidated `deploy.sql` under
-`artifacts/oracle/_migration/convert/sessions/<session-id>/` is the single file that creates
-the whole target schema in dependency order. After you fix the root cause of a task, **rerun
-the conversion** (Step 3) so `deploy.sql` is regenerated — a change made directly against the
-scratch database is *not* propagated.
+The consolidated `deploy.sql` is the single file that creates the whole target schema in
+dependency order. It's written **inside your migration project folder** (the writable folder
+you chose in Step 1 — the Desktop for this POC) once the conversion succeeds, under
+`artifacts/oracle/<schema>/convert/sessions/<session-id>/deploy.sql`. For the `HR` schema that
+is, for example,
+`Desktop\<project>\artifacts\oracle\HR\convert\sessions\<session-id>\deploy.sql`. After you fix
+the root cause of a task, **rerun the conversion** (Step 3) so `deploy.sql` is regenerated — a
+change made directly against the scratch database is *not* propagated.
 
 To deploy it to the PostgreSQL target:
 
