@@ -146,22 +146,20 @@ On **Configuration**, review the settings for the selected components. The defau
 suitable for the rapid POC; adjust VM sizes for quota or availability and change the model
 deployment name only when deploying a different model configuration.
 
-[![Azure portal Configuration tab with settings for the selected deployment components](deploy/azure/media/deployment-guide/03-configure-components.png)](deploy/azure/media/deployment-guide/03-configure-components.png)
-
 After configuration, use **Review + create** to confirm the project details, selected
 components, and component settings. When validation succeeds, select **Create**.
 
-[![Azure portal Review and create page with deployment details and the Create action identified](deploy/azure/media/deployment-guide/04-review-and-create.png)](deploy/azure/media/deployment-guide/04-review-and-create.png)
+[![Azure portal Review and create page with deployment details and the Create action identified](deploy/azure/media/deployment-guide/03-review-and-create.png)](deploy/azure/media/deployment-guide/03-review-and-create.png)
 
 After deployment, open the resource group and verify that the resources for your selected
 components were created. If you deployed the workstation, open **migration-workstation** next.
 
-[![Azure portal resource group Overview page with deployed resources and migration-workstation identified](deploy/azure/media/deployment-guide/05-validate-deployed-resources.png)](deploy/azure/media/deployment-guide/05-validate-deployed-resources.png)
+[![Azure portal resource group Overview page with deployed resources and migration-workstation identified](deploy/azure/media/deployment-guide/04-validate-deployed-resources.png)](deploy/azure/media/deployment-guide/04-validate-deployed-resources.png)
 
 On the workstation page, select **Connect** > **Connect via Bastion** for browser access. The
 deployment blocks direct public RDP; use Bastion or the documented Bastion tunnel instead.
 
-[![Azure portal migration-workstation page with Connect via Bastion identified](deploy/azure/media/deployment-guide/06-connect-via-bastion.png)](deploy/azure/media/deployment-guide/06-connect-via-bastion.png)
+[![Azure portal migration-workstation page with Connect via Bastion identified](deploy/azure/media/deployment-guide/05-connect-via-bastion.png)](deploy/azure/media/deployment-guide/05-connect-via-bastion.png)
 
 ## What's installed on the workstation
 
@@ -192,24 +190,24 @@ The workstation is a Windows Server 2022 VM provisioned at deploy time by
 On first logon, keep the setup command open while it installs the per-user Visual Studio Code
 extensions. For browser-based Bastion, allow cookies and pop-ups for the Azure portal.
 
-[![Azure Bastion workstation session showing first-logon extension installation](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)
+[![Azure Bastion workstation session showing first-logon extension installation](deploy/azure/media/deployment-guide/06-complete-workstation-setup.png)](deploy/azure/media/deployment-guide/06-complete-workstation-setup.png)
 
 Dismiss the Windows first-logon prompts and close Server Manager pop-ups. Network discovery
 isn't required for this workflow, so select **No** unless your organization requires it.
 
-[![Windows Server desktop showing network discovery and Server Manager first-logon prompts](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)
+[![Windows Server desktop showing network discovery and Server Manager first-logon prompts](deploy/azure/media/deployment-guide/07-dismiss-first-logon-prompts.png)](deploy/azure/media/deployment-guide/07-dismiss-first-logon-prompts.png)
 
 Open **connection-info.txt** from the public desktop and keep it available for the Migration
 Wizard. It contains connection metadata for the selected components, but no passwords, API
 keys, or tokens.
 
-[![Windows workstation showing the connection-info file used during migration setup](deploy/azure/media/deployment-guide/09-review-connection-info.png)](deploy/azure/media/deployment-guide/09-review-connection-info.png)
+[![Windows workstation showing the connection-info file used during migration setup](deploy/azure/media/deployment-guide/08-review-connection-info.png)](deploy/azure/media/deployment-guide/08-review-connection-info.png)
 
 Open the Windows **Start** menu, launch **Visual Studio Code**, and confirm the PostgreSQL
 extension is installed before starting the Migration Wizard. If the initial GitHub sign-in
 welcome screen appears, close it and authenticate later when the workflow requests it.
 
-[![Windows Start menu with Visual Studio Code and its initial welcome screen close action identified](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)
+[![Windows Start menu with Visual Studio Code and its initial welcome screen close action identified](deploy/azure/media/deployment-guide/09-open-visual-studio-code.png)](deploy/azure/media/deployment-guide/09-open-visual-studio-code.png)
 
 ## Run the schema conversion
 
@@ -223,12 +221,12 @@ In the PostgreSQL extension, select **Add Connection**. Use `postgresFqdn`, port
 `postgresDatabase`, SSL mode `require`, `postgresAdmin`, and your deployment password.
 Don't save the password on a shared or long-lived workstation.
 
-[![Visual Studio Code PostgreSQL extension showing the PostgreSQL target connection workflow](deploy/azure/media/deployment-guide/11-connect-postgresql-target.png)](deploy/azure/media/deployment-guide/11-connect-postgresql-target.png)
+[![Visual Studio Code PostgreSQL extension showing the PostgreSQL target connection workflow](deploy/azure/media/deployment-guide/10-connect-postgresql-target.png)](deploy/azure/media/deployment-guide/10-connect-postgresql-target.png)
 
 Confirm the server appears under **Connections**, open **Migrations**, and choose a writable
 project folder. Desktop is used for this POC, but any suitable folder works.
 
-[![Visual Studio Code PostgreSQL extension showing the connected server and migration project folder workflow](deploy/azure/media/deployment-guide/12-open-migrations-workspace.png)](deploy/azure/media/deployment-guide/12-open-migrations-workspace.png)
+[![Visual Studio Code PostgreSQL extension showing the connected server and migration project folder workflow](deploy/azure/media/deployment-guide/11-open-migrations-workspace.png)](deploy/azure/media/deployment-guide/11-open-migrations-workspace.png)
 
 ### 2. Create the migration project
 
@@ -236,20 +234,20 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
 
 1. **Project Setup** — name the project, then **Next**.
 
-  [![Visual Studio Code Migration Project Setup showing the project creation and naming workflow](deploy/azure/media/deployment-guide/13-create-migration-project.png)](deploy/azure/media/deployment-guide/13-create-migration-project.png)
+  [![Visual Studio Code Migration Project Setup showing the project creation and naming workflow](deploy/azure/media/deployment-guide/12-create-migration-project.png)](deploy/azure/media/deployment-guide/12-create-migration-project.png)
 
 2. **Connect to Oracle** — host `oraclePrivateIp`, port `1521`, service `FREEPDB1`, user
    `MIG` with your deploy password. Copy these values from the **connection-info** Notepad
    file on the workstation desktop. Select **Load Schemas**, choose **HR**, then **Next**.
 
-  [![Visual Studio Code Migration Project Setup Connect to Oracle page with Oracle connection fields, Load Schemas, and HR schema selection identified](deploy/azure/media/deployment-guide/14-connect-to-oracle.png)](deploy/azure/media/deployment-guide/14-connect-to-oracle.png)
+  [![Visual Studio Code Migration Project Setup Connect to Oracle page with Oracle connection fields, Load Schemas, and HR schema selection identified](deploy/azure/media/deployment-guide/13-connect-to-oracle.png)](deploy/azure/media/deployment-guide/13-connect-to-oracle.png)
 
 3. **Scratch database** — connect to the PostgreSQL flexible server (`postgresFqdn`) with
    admin `azureuser` and your deploy password (SSL mode `require`). Pick the pre-created
    `migration_sandbox` database (output `postgresDatabase`) as the target — the recommended
    extensions are already installed there — select **Verify Extensions**, then **Next**.
 
-  [![Visual Studio Code Migration Project Setup Choose an Azure Database for PostgreSQL scratch database page with the PostgreSQL connection, scratch database, and Next action identified](deploy/azure/media/deployment-guide/15-select-scratch-database.png)](deploy/azure/media/deployment-guide/15-select-scratch-database.png)
+  [![Visual Studio Code Migration Project Setup Choose an Azure Database for PostgreSQL scratch database page with the PostgreSQL connection, scratch database, and Next action identified](deploy/azure/media/deployment-guide/14-select-scratch-database.png)](deploy/azure/media/deployment-guide/14-select-scratch-database.png)
 
 4. **Microsoft Foundry** — enter `foundryEndpoint` and the **deployment name** `gpt-5-mini`
    (this is the model deployment, not the resource name; both are also set on the workstation
@@ -267,18 +265,18 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
      and will fail with `PermissionDenied` — grant it the same role.)
 5. Select **Test Connection**, then **Create Migration Project**.
 
-  [![Visual Studio Code Migration Project Setup Choose a Microsoft Foundry Model page with authentication method, endpoint, deployment name, Test Connection, and Create Migration Project identified](deploy/azure/media/deployment-guide/16-configure-foundry-model.png)](deploy/azure/media/deployment-guide/16-configure-foundry-model.png)
+  [![Visual Studio Code Migration Project Setup Choose a Microsoft Foundry Model page with authentication method, endpoint, deployment name, Test Connection, and Create Migration Project identified](deploy/azure/media/deployment-guide/15-configure-foundry-model.png)](deploy/azure/media/deployment-guide/15-configure-foundry-model.png)
 
 ### 3. Run the conversion
 
 On the **Schema Migration** card select **Migrate**, watch the *Extracting → Converting*
 stages, and wait for **Migration Complete**. Select **View Migration Report**.
 
-[![Visual Studio Code PostgreSQL Migrations view with the Schema Migration card, Migrate action, and project readiness settings identified](deploy/azure/media/deployment-guide/17-run-schema-migration.png)](deploy/azure/media/deployment-guide/17-run-schema-migration.png)
+[![Visual Studio Code PostgreSQL Migrations view with the Schema Migration card, Migrate action, and project readiness settings identified](deploy/azure/media/deployment-guide/16-run-schema-migration.png)](deploy/azure/media/deployment-guide/16-run-schema-migration.png)
 
 ### 4. Review, triage, and resolve
 
-[![Visual Studio Code showing the completed Schema Migration and the Migration Readiness Report with overall conversion status and table of contents identified](deploy/azure/media/deployment-guide/18-migration-readiness-report.png)](deploy/azure/media/deployment-guide/18-migration-readiness-report.png)
+[![Visual Studio Code showing the completed Schema Migration and the Migration Readiness Report with overall conversion status and table of contents identified](deploy/azure/media/deployment-guide/17-migration-readiness-report.png)](deploy/azure/media/deployment-guide/17-migration-readiness-report.png)
 
 1. Read `reports/customer_summary.md` first for the readiness decision, success percentage,
    and the count of **Mandatory** tasks. For a per-object breakdown with DDL snippets, open
