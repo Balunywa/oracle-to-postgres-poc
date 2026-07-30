@@ -153,8 +153,6 @@ components, and component settings. When validation succeeds, select **Create**.
 
 [![Azure portal Review and create page with deployment details and the Create action identified](deploy/azure/media/deployment-guide/04-review-and-create.png)](deploy/azure/media/deployment-guide/04-review-and-create.png)
 
-For the complete portal procedure, see [Deploy the environment](deploy/azure/DEPLOYMENT.md#deploy).
-
 After deployment, open the resource group and verify that the resources for your selected
 components were created. If you deployed the workstation, open **migration-workstation** next.
 
@@ -212,9 +210,6 @@ extension is installed before starting the Migration Wizard. If the initial GitH
 welcome screen appears, close it and authenticate later when the workflow requests it.
 
 [![Windows Start menu with Visual Studio Code and its initial welcome screen close action identified](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)](deploy/azure/media/deployment-guide/10-open-visual-studio-code.png)
-
-For browser and native RDP connection details, see the full
-[connection and workstation setup walkthrough](deploy/azure/DEPLOYMENT.md#connect).
 
 ## Run the schema conversion
 
@@ -397,7 +392,6 @@ az group delete -n oracle-bridge-rg --yes
 | [deploy/azure/setup.ps1](deploy/azure/setup.ps1) | PowerShell run by an Azure Run Command — installs VS Code + PostgreSQL extension + Oracle Instant Client + Azure CLI on the workstation |
 | [deploy/azure/teardown.sh](deploy/azure/teardown.sh) | Deletes the resource group and purges the soft-deleted Azure OpenAI account |
 | [deploy/azure/cloud-init.yaml](deploy/azure/cloud-init.yaml) | Cloud-init for the **Oracle source VM** — installs Docker, runs Oracle Database Free 23ai, and seeds the sample HR schema on first boot |
-| [deploy/azure/DEPLOYMENT.md](deploy/azure/DEPLOYMENT.md) | Detailed deployment guide and the in-editor workflow |
 | [deploy/azure/schema-conversions-vm-workstation.md](deploy/azure/schema-conversions-vm-workstation.md) | Microsoft Learn-style article describing the workstation approach |
 
 ## Deploy from the command line (optional)
@@ -430,9 +424,6 @@ The deployment outputs `publicFqdn`, `vmResourceId`, `bastionRdpTunnelCommand`,
 and `foundryDeployment`. Access is **RDP only, via an Azure Bastion tunnel** — no SSH, no
 public RDP port, no public web ports. Open the tunnel, RDP to `localhost:13389` with the
 password you set, then use VS Code. Reset the password later via `az vm run-command`.
-
-See [deploy/azure/DEPLOYMENT.md](deploy/azure/DEPLOYMENT.md) for prerequisites, connection
-steps, the in-editor workflow, security notes, and tear-down.
 
 ## Security
 
