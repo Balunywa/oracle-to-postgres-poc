@@ -271,6 +271,9 @@ environment variables `FOUNDRY_ENDPOINT` and `FOUNDRY_DEPLOYMENT`.
 In the PostgreSQL extension, open the **Migrations (preview)** view → **Create Migration Project**:
 
 1. **Project Setup** — name the project, then **Next**.
+
+  [![Visual Studio Code Migration Project Setup showing the project creation and naming workflow](deploy/azure/media/deployment-guide/13-create-migration-project.png)](deploy/azure/media/deployment-guide/13-create-migration-project.png)
+
 2. **Connect to Oracle** — host `oraclePrivateIp`, port `1521`, service `FREEPDB1`, user
    `MIG` with your deploy password. Select **Load Schemas**, choose **HR**, then **Next**.
 3. **Scratch database** — connect to the PostgreSQL flexible server (`postgresFqdn`) with

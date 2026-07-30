@@ -257,6 +257,16 @@ Portal labels and example VM details in the image can differ from your deploymen
 
 [![Visual Studio Code PostgreSQL extension showing the connected server, Migrations area, and project folder selection](media/deployment-guide/12-open-migrations-workspace.png)](media/deployment-guide/12-open-migrations-workspace.png)
 
+### Create the migration project
+
+1. If needed, select the PostgreSQL extension icon to return to its panel.
+1. Under **Migrations**, select **Create Migration Project**.
+1. Enter a descriptive project name. The name identifies this migration workspace and doesn't
+  need to match an Azure resource name.
+1. Select **Next: Oracle Connection** to continue to the source connection step.
+
+[![Visual Studio Code Migration Project Setup showing Create Migration Project, project name, and Next Oracle Connection](media/deployment-guide/13-create-migration-project.png)](media/deployment-guide/13-create-migration-project.png)
+
 ### Connect with a native RDP client
 
 To use a local RDP client instead of the browser, open a Bastion tunnel:
