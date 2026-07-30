@@ -164,7 +164,23 @@ Outputs include `publicFqdn`, `vmResourceId`, `bastionRdpTunnelCommand`, `oracle
 
 [![Azure portal resource group Overview page showing deployed resources and the migration-workstation virtual machine selection](media/deployment-guide/05-validate-deployed-resources.png)](media/deployment-guide/05-validate-deployed-resources.png)
 
+### Collect deployment outputs
+
+The remaining steps use the deployment outputs and the generated **connection-info.txt** file.
+Retrieve the current outputs at any time with:
+
+```bash
+az deployment group show -g oracle-bridge-rg -n <deployment-name> \
+  --query properties.outputs -o jsonc
+```
+
+For a portal deployment, open the completed deployment and select **Outputs**. Values for
+components you didn't deploy are empty.
+
 ## Connect
+
+Choose one connection method. Browser-based Bastion is the simplest option for this tutorial;
+use a native RDP client when you need its local desktop features.
 
 ### Connect in the Azure portal
 
@@ -178,6 +194,21 @@ Outputs include `publicFqdn`, `vmResourceId`, `bastionRdpTunnelCommand`, `oracle
 
 Portal labels and example VM details in the image can differ from your deployment, but the
 **Connect** > **Connect via Bastion** path is the same.
+
+### Connect with a native RDP client
+
+To use a local RDP client instead of the browser, open a Bastion tunnel:
+
+```bash
+az network bastion tunnel -n oracle-bridge-bastion -g oracle-bridge-rg \
+  --target-resource-id <vmResourceId> --resource-port 3389 --port 13389
+```
+
+RDP to `localhost:13389` and sign in with the administrator credentials from the deployment.
+On Windows, use Remote Desktop Connection. On macOS or Linux, use Windows App. The command
+requires the Azure CLI `bastion` extension and the Standard Bastion SKU deployed by this template.
+
+After connecting by either method, continue with the first-logon steps.
 
 ### Complete first-logon setup
 
@@ -267,39 +298,9 @@ Portal labels and example VM details in the image can differ from your deploymen
 
 [![Visual Studio Code Migration Project Setup showing Create Migration Project, project name, and Next Oracle Connection](media/deployment-guide/13-create-migration-project.png)](media/deployment-guide/13-create-migration-project.png)
 
-### Connect with a native RDP client
-
-To use a local RDP client instead of the browser, open a Bastion tunnel:
-
-```bash
-# Open an RDP tunnel through Bastion, then RDP to localhost:13389:
-az network bastion tunnel -n oracle-bridge-bastion -g oracle-bridge-rg \
-  --target-resource-id <vmResourceId> --resource-port 3389 --port 13389
-```
-
-RDP to `localhost:13389` and sign in with the administrator credentials from the deployment.
-After connecting by either method, open Visual Studio Code, run `az login`, then open the
-**PostgreSQL** extension and start the **Migration Wizard**.
-
-Use the deployment outputs to fill in the connections. Retrieve them with:
-
-```bash
-az deployment group show -g oracle-bridge-rg -n main \
-  --query properties.outputs -o json
-```
-
-- **Oracle source** — host `oraclePrivateIp`, port 1521, service `oracleServiceName` (`FREEPDB1`), user `system` (or the migration user `mig`), password = the admin password you set.
-- **PostgreSQL target** — host `postgresFqdn`, port 5432, admin user `postgresAdmin`, password = the admin password you set. Reachable only from inside the VNet, so connect from the workstation.
-- **Azure OpenAI** — endpoint `foundryEndpoint`, deployment `foundryDeployment`; already written to the workstation's environment for the extension.
-
-The Oracle container seeds on first boot and can take several minutes. On the Oracle VM,
-`oracle-status` (or the cloud-init log) reports `PROVISION_COMPLETE` when the sample HR
-schema is ready.
-
-You need an RDP client: on Windows use the built-in Remote Desktop Connection; on macOS
-or Linux install the **Windows App** (formerly Microsoft Remote Desktop). The
-`az network bastion tunnel` command requires the Bastion **Standard** SKU with tunneling
-enabled — this deployment configures both.
+The next screen requests the Oracle source connection. For the built-in source, use
+`oraclePrivateIp`, port `1521`, service `FREEPDB1`, migration user `MIG`, and the deployment
+password. The Oracle container can take several minutes to finish seeding after deployment.
 
 To reset the login password later without a console:
 
@@ -309,7 +310,7 @@ az vm run-command invoke -g oracle-bridge-rg -n migration-workstation \
   --scripts "net user azureuser '<new-password>'"
 ```
 
-## What you do in the workstation
+## Workflow summary
 
 | Step | In VS Code | Backed by |
 |---|---|---|
