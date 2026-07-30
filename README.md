@@ -299,6 +299,13 @@ stages, and wait for **Migration Complete**. Select **View Migration Report**.
 4. Independently validate every AI-assisted fix — the success percentage reflects automated
    coverage, not deployment readiness.
 
+[![Visual Studio Code Schema Review pane showing pending migration tasks filtered by Status Pending and Priority Mandatory, ready to resolve](deploy/azure/media/deployment-guide/18-review-pending-tasks.png)](deploy/azure/media/deployment-guide/18-review-pending-tasks.png)
+
+The first time you select **Run Task**, VS Code prompts you to sign in to GitHub Copilot —
+choose **Continue with GitHub** and use the account that holds your Copilot license.
+
+[![Visual Studio Code Sign in to use GitHub Copilot dialog with the Continue with GitHub sign-in options identified](deploy/azure/media/deployment-guide/19-sign-in-to-copilot.png)](deploy/azure/media/deployment-guide/19-sign-in-to-copilot.png)
+
 ### 5. Produce and deploy `deploy.sql`
 
 The consolidated `deploy.sql` is the single file that creates the whole target schema in
