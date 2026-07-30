@@ -99,6 +99,19 @@ No local tooling is required.
 
 [![Azure portal Components tab showing Select all and individual workstation, Oracle, PostgreSQL, and AI conversion component selections](media/deployment-guide/02-select-components.png)](media/deployment-guide/02-select-components.png)
 
+### Configure components
+
+1. On **Configuration**, review the sections for the components you selected. Unselected
+  component settings aren't shown.
+1. Choose the workstation and Oracle VM sizes. The defaults are suitable for a rapid POC;
+  change them when your region or subscription has different quota or availability.
+1. Choose the PostgreSQL compute tier. **Burstable** is the economical default for this lab.
+1. Confirm the Azure OpenAI model deployment name. Keep `gpt-5-mini` unless you changed the
+  model parameters for your deployment.
+1. Select **Review + create**.
+
+[![Azure portal Configuration tab showing workstation VM size, Oracle VM size, PostgreSQL compute tier, and model deployment name](media/deployment-guide/03-configure-components.png)](media/deployment-guide/03-configure-components.png)
+
 ### Review and create
 
 1. On **Configuration**, review the settings shown for the components you selected, and then
@@ -231,6 +244,18 @@ Portal labels and example VM details in the image can differ from your deploymen
 1. Test and save the connection.
 
 [![Visual Studio Code PostgreSQL extension showing Add Connection and the PostgreSQL target connection fields](media/deployment-guide/11-connect-postgresql-target.png)](media/deployment-guide/11-connect-postgresql-target.png)
+
+### Open the migration workspace
+
+1. Confirm that the PostgreSQL server appears under **Connections**.
+1. Scroll to **Migrations** in the PostgreSQL extension, and select the empty Migrations area
+  to start a migration project.
+1. When the folder picker opens, choose a writable project folder. **Desktop** is convenient
+  for this disposable POC, but any suitable folder works.
+1. The PostgreSQL extension creates the migration workspace and generated artifacts in the
+  selected folder.
+
+[![Visual Studio Code PostgreSQL extension showing the connected server, Migrations area, and project folder selection](media/deployment-guide/12-open-migrations-workspace.png)](media/deployment-guide/12-open-migrations-workspace.png)
 
 ### Connect with a native RDP client
 

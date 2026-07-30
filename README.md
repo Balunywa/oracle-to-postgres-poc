@@ -142,6 +142,12 @@ individual components. Then select **Next** to configure your selection.
 
 [![Azure portal Components tab with Select all and the four deployable components identified](deploy/azure/media/deployment-guide/02-select-components.png)](deploy/azure/media/deployment-guide/02-select-components.png)
 
+On **Configuration**, review the settings for the selected components. The defaults are
+suitable for the rapid POC; adjust VM sizes for quota or availability and change the model
+deployment name only when deploying a different model configuration.
+
+[![Azure portal Configuration tab with settings for the selected deployment components](deploy/azure/media/deployment-guide/03-configure-components.png)](deploy/azure/media/deployment-guide/03-configure-components.png)
+
 After configuration, use **Review + create** to confirm the project details, selected
 components, and component settings. When validation succeeds, select **Create**.
 
@@ -254,6 +260,11 @@ environment variables `FOUNDRY_ENDPOINT` and `FOUNDRY_DEPLOYMENT`.
   Don't save the password on a shared or long-lived workstation.
 
 [![Visual Studio Code PostgreSQL extension showing the PostgreSQL target connection workflow](deploy/azure/media/deployment-guide/11-connect-postgresql-target.png)](deploy/azure/media/deployment-guide/11-connect-postgresql-target.png)
+
+5. Confirm the server appears under **Connections**, open **Migrations**, and choose a writable
+  project folder. Desktop is used for this POC, but any suitable folder works.
+
+[![Visual Studio Code PostgreSQL extension showing the connected server and migration project folder workflow](deploy/azure/media/deployment-guide/12-open-migrations-workspace.png)](deploy/azure/media/deployment-guide/12-open-migrations-workspace.png)
 
 ### 3. Create the migration project
 
