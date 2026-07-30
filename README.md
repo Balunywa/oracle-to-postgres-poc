@@ -253,6 +253,9 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
    admin `azureuser` and your deploy password (SSL mode `require`). Pick the pre-created
    `migration_sandbox` database (output `postgresDatabase`) as the target — the recommended
    extensions are already installed there — select **Verify Extensions**, then **Next**.
+
+  [![Visual Studio Code Migration Project Setup Choose an Azure Database for PostgreSQL scratch database page with the PostgreSQL connection, scratch database, and Next action identified](deploy/azure/media/deployment-guide/15-select-scratch-database.png)](deploy/azure/media/deployment-guide/15-select-scratch-database.png)
+
 4. **Microsoft Foundry** — enter `foundryEndpoint` and the **deployment name** `gpt-5-mini`
    (this is the model deployment, not the resource name; both are also set on the workstation
    as the machine environment variables `FOUNDRY_ENDPOINT` and `FOUNDRY_DEPLOYMENT`).
