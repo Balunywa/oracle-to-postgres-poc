@@ -272,6 +272,8 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
      and will fail with `PermissionDenied` — grant it the same role.)
 5. Select **Test Connection**, then **Create Migration Project**.
 
+  [![Visual Studio Code Migration Project Setup Choose a Microsoft Foundry Model page with authentication method, endpoint, deployment name, Test Connection, and Create Migration Project identified](deploy/azure/media/deployment-guide/16-configure-foundry-model.png)](deploy/azure/media/deployment-guide/16-configure-foundry-model.png)
+
 ### 3. Run the conversion
 
 On the **Schema Migration** card select **Migrate**, watch the *Extracting → Converting*
