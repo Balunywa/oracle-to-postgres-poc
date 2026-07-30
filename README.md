@@ -279,6 +279,8 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
 On the **Schema Migration** card select **Migrate**, watch the *Extracting → Converting*
 stages, and wait for **Migration Complete**. Select **View Migration Report**.
 
+[![Visual Studio Code PostgreSQL Migrations view with the Schema Migration card, Migrate action, and project readiness settings identified](deploy/azure/media/deployment-guide/17-run-schema-migration.png)](deploy/azure/media/deployment-guide/17-run-schema-migration.png)
+
 ### 4. Review, triage, and resolve
 
 1. Read `reports/customer_summary.md` first for the readiness decision, success percentage,
