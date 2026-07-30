@@ -220,34 +220,11 @@ For browser and native RDP connection details, see the full
 
 The template stands up the whole environment, but the conversion itself is an **interactive**
 task you run inside VS Code on the workstation — the Migration Wizard and GitHub Copilot
-can't run headlessly. Follow these steps once the deployment finishes.
+can't run headlessly. Follow these steps once the deployment finishes. Every value the wizard
+asks for is on the workstation desktop in **connection-info.txt** (see the connection step
+above); the passwords are the deploy password you set.
 
-### 1. Collect your connection values
-
-Every value the wizard asks for is a deployment output. Open the deployment's **Outputs**
-in the portal, or run:
-
-```bash
-az deployment group show -g oracle-bridge-rg -n <deployment-name> \
-  --query properties.outputs -o jsonc
-```
-
-| Wizard field | Value | Output |
-|---|---|---|
-| Oracle host | e.g. `10.42.3.4` | `oraclePrivateIp` |
-| Oracle port | `1521` | (fixed) |
-| Oracle service name | `FREEPDB1` | `oracleServiceName` |
-| Oracle migration user | `MIG` + your deploy password | seeded, read-only |
-| PostgreSQL server | e.g. `orabridge-pg-xxxx.postgres.database.azure.com` | `postgresFqdn` |
-| PostgreSQL admin | `azureuser` + your deploy password | `postgresAdmin` |
-| PostgreSQL scratch database | `migration_sandbox` | `postgresDatabase` |
-| Foundry endpoint | e.g. `https://orabridge-oai-xxxx.openai.azure.com/` | `foundryEndpoint` |
-| Foundry deployment | `gpt-5-mini` | `foundryDeployment` |
-
-The Foundry endpoint and deployment are also set on the workstation as the machine
-environment variables `FOUNDRY_ENDPOINT` and `FOUNDRY_DEPLOYMENT`.
-
-### 2. Connect and sign in
+### 1. Connect and sign in
 
 1. Open the Bastion RDP tunnel (the `bastionRdpTunnelCommand` output) and RDP to
    `localhost:13389` with your admin username and password.
@@ -266,7 +243,7 @@ environment variables `FOUNDRY_ENDPOINT` and `FOUNDRY_DEPLOYMENT`.
 
 [![Visual Studio Code PostgreSQL extension showing the connected server and migration project folder workflow](deploy/azure/media/deployment-guide/12-open-migrations-workspace.png)](deploy/azure/media/deployment-guide/12-open-migrations-workspace.png)
 
-### 3. Create the migration project
+### 2. Create the migration project
 
 In the PostgreSQL extension, open the **Migrations (preview)** view → **Create Migration Project**:
 
@@ -281,7 +258,9 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
    `migration_sandbox` database (output `postgresDatabase`) as the target — the recommended
    extensions are already installed there — select **Verify Extensions**, then **Next**.
 4. **Microsoft Foundry** — enter `foundryEndpoint` and the **deployment name** `gpt-5-mini`
-   (this is the model deployment, not the resource name). Authenticate either way:
+   (this is the model deployment, not the resource name; both are also set on the workstation
+   as the machine environment variables `FOUNDRY_ENDPOINT` and `FOUNDRY_DEPLOYMENT`).
+   Authenticate either way:
    - **API key** (simplest) — copy it from the Azure OpenAI resource → **Keys and Endpoint**.
      Reading the key requires Contributor/Owner on the resource, which you have as the deployer.
      *If the portal shows "API key authentication is disabled by your resource owner", your
@@ -294,12 +273,12 @@ In the PostgreSQL extension, open the **Migrations (preview)** view → **Create
      and will fail with `PermissionDenied` — grant it the same role.)
 5. Select **Test Connection**, then **Create Migration Project**.
 
-### 4. Run the conversion
+### 3. Run the conversion
 
 On the **Schema Migration** card select **Migrate**, watch the *Extracting → Converting*
 stages, and wait for **Migration Complete**. Select **View Migration Report**.
 
-### 5. Review, triage, and resolve
+### 4. Review, triage, and resolve
 
 1. Read `reports/customer_summary.md` first for the readiness decision, success percentage,
    and the count of **Mandatory** tasks. For a per-object breakdown with DDL snippets, open
@@ -316,7 +295,7 @@ stages, and wait for **Migration Complete**. Select **View Migration Report**.
 4. Independently validate every AI-assisted fix — the success percentage reflects automated
    coverage, not deployment readiness.
 
-### 6. Produce and deploy `deploy.sql`
+### 5. Produce and deploy `deploy.sql`
 
 The consolidated `deploy.sql` under
 `artifacts/oracle/_migration/convert/sessions/<session-id>/` creates the target schema in
