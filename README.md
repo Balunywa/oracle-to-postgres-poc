@@ -342,6 +342,8 @@ To deploy it to the PostgreSQL target:
    dependency order.
 4. Refresh the explorer and confirm the schema objects now exist **under `migration_sandbox`**.
 
+[![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)
+
 > **Watch the active database.** A flexible-server connection defaults to `postgres`, so if you
 > run `deploy.sql` without selecting `migration_sandbox` the schema lands in the wrong database.
 > To undo that, connect to `postgres` and run `DROP SCHEMA <schema> CASCADE;`, then re-run
