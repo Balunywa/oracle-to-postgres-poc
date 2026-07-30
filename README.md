@@ -168,8 +168,7 @@ extensions. For browser-based Bastion, allow cookies and pop-ups for the Azure p
 [![Azure Bastion workstation session showing first-logon extension installation](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)](deploy/azure/media/deployment-guide/07-complete-workstation-setup.png)
 
 Dismiss the Windows first-logon prompts and close Server Manager pop-ups. Network discovery
-isn't required for this workflow, so select **No** unless your organization requires it. The
-image annotation that selects **Yes** isn't the recommended default for this deployment.
+isn't required for this workflow, so select **No** unless your organization requires it.
 
 [![Windows Server desktop showing network discovery and Server Manager first-logon prompts](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)](deploy/azure/media/deployment-guide/08-dismiss-first-logon-prompts.png)
 

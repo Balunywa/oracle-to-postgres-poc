@@ -187,10 +187,6 @@ Portal labels and example VM details in the image can differ from your deploymen
 1. Close the Windows Admin Center promotion and any other Server Manager pop-up windows.
 1. Minimize or close Server Manager when the desktop is clear.
 
-> [!IMPORTANT]
-> The supplied image labels **Yes** for network discovery. For this isolated migration
-> workstation, use **No** by default to avoid enabling an unnecessary service.
-
 [![Windows Server first-logon desktop showing the network discovery prompt and Server Manager pop-up close action](media/deployment-guide/08-dismiss-first-logon-prompts.png)](media/deployment-guide/08-dismiss-first-logon-prompts.png)
 
 ### Connect with a native RDP client
