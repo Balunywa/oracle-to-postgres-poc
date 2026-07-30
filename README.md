@@ -283,6 +283,8 @@ stages, and wait for **Migration Complete**. Select **View Migration Report**.
 
 ### 4. Review, triage, and resolve
 
+[![Visual Studio Code showing the completed Schema Migration and the Migration Readiness Report with overall conversion status and table of contents identified](deploy/azure/media/deployment-guide/18-migration-readiness-report.png)](deploy/azure/media/deployment-guide/18-migration-readiness-report.png)
+
 1. Read `reports/customer_summary.md` first for the readiness decision, success percentage,
    and the count of **Mandatory** tasks. For a per-object breakdown with DDL snippets, open
    `reports/technical_conversion_report.md`; treat `reports/review_tasks.md` as an offline
