@@ -179,6 +179,20 @@ Portal labels and example VM details in the image can differ from your deploymen
 
 [![Browser-based Azure Bastion session showing the first-logon command installing Visual Studio Code extensions](media/deployment-guide/07-complete-workstation-setup.png)](media/deployment-guide/07-complete-workstation-setup.png)
 
+### Dismiss Windows first-logon prompts
+
+1. If Windows asks whether the workstation should be discoverable on the network, select
+  **No** unless your organization's policy explicitly requires network discovery. Discovery
+  isn't required for Oracle connectivity, PostgreSQL connectivity, or Bastion access.
+1. Close the Windows Admin Center promotion and any other Server Manager pop-up windows.
+1. Minimize or close Server Manager when the desktop is clear.
+
+> [!IMPORTANT]
+> The supplied image labels **Yes** for network discovery. For this isolated migration
+> workstation, use **No** by default to avoid enabling an unnecessary service.
+
+[![Windows Server first-logon desktop showing the network discovery prompt and Server Manager pop-up close action](media/deployment-guide/08-dismiss-first-logon-prompts.png)](media/deployment-guide/08-dismiss-first-logon-prompts.png)
+
 ### Connect with a native RDP client
 
 To use a local RDP client instead of the browser, open a Bastion tunnel:
