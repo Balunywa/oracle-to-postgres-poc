@@ -89,7 +89,7 @@
       }
     ],
     "outputs": {
-      "location": "[location()]",
+      "location": "[resourceGroup().location]",
       "adminUsername": "[basics('adminUsername')]",
       "adminPassword": "[basics('adminPassword')]",
       "vmSize": "[steps('workstation').vmSize]",
