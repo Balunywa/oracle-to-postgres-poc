@@ -14,6 +14,10 @@ database, and the Microsoft Foundry deployment. For more information, see
 [Security and networking](schema-conversions-overview.md#security-and-networking)
 and [Secure the conversion workflow](schema-conversions-best-practices.md#secure-the-conversion-workflow).
 
+> [!NOTE]
+> This is a Microsoft Learn source article. Links to other `schema-conversions-*`
+> articles resolve on Microsoft Learn and are not part of this repository.
+
 In many enterprises the source Oracle database is reachable only from inside a
 private virtual network, and a local machine has no route to it. Rather than open
 inbound access to Oracle, run the PostgreSQL extension from a Visual Studio Code
@@ -42,6 +46,8 @@ database, and Microsoft Foundry, use the standard local workflow instead. See
 
 ## Architecture
 
+[![Logical architecture showing Azure Bastion, the migration workstation, Oracle source, PostgreSQL target, and Microsoft Foundry](media/schema-conversions-vm-workstation/logical-architecture.png)](media/schema-conversions-vm-workstation/logical-architecture.png)
+
 The workstation is a virtual machine that runs Visual Studio Code inside the
 virtual network that the source Oracle database trusts. The conversion components
 are unchanged from the standard flow:
@@ -50,6 +56,12 @@ are unchanged from the standard flow:
 - **Workstation virtual machine**: An Azure virtual machine inside the virtual network. It runs Visual Studio Code with the PostgreSQL extension and, when required, Oracle Instant Client for thick client mode.
 - **Azure Database for PostgreSQL flexible server**: Hosts the scratch schemas the tool uses to validate converted objects, and the production target.
 - **Microsoft Foundry**: Provides the language models that power AI-driven schema transformation, reached over a private endpoint.
+
+The supplied deployment uses Azure Bastion for RDP and blocks direct inbound RDP
+to the workstation. The workstation's public IP supports its required outbound
+downloads; it isn't the user access path. When you use a customer-provided Oracle
+source, route the workstation to that source through virtual network peering, VPN,
+ExpressRoute, or an explicitly secured endpoint.
 
 The workstation needs a network path to each endpoint. Peer or connect its
 virtual network with the network that holds Oracle, and use a private endpoint or
@@ -75,7 +87,7 @@ described in
 
 1. **Create a virtual machine in the right virtual network**: Deploy a Windows or Linux virtual machine into the virtual network that can reach the source Oracle database. Place it in a subnet that has, or can be peered to, a route to Oracle.
 
-1. **Connect to the virtual machine privately**: Connect by using Azure Bastion with Microsoft Entra ID authentication, so you don't expose a public management port or manage SSH keys. For more information, see [What is Azure Bastion?](/azure/bastion/bastion-overview).
+1. **Connect to the virtual machine privately**: Connect by using Azure Bastion so you don't expose a public management port or manage SSH keys. This deployment signs in over RDP with the admin password you set at deploy time; for stronger control you can enable Microsoft Entra ID sign-in and gate access with Azure role-based access control. For more information, see [What is Azure Bastion?](/azure/bastion/bastion-overview).
 
 1. **Install Visual Studio Code and the PostgreSQL extension**: On the virtual machine, install Visual Studio Code and the PostgreSQL extension published by Microsoft, as described in [Install the extension](schema-conversions-overview.md#install-the-extension).
 
@@ -100,7 +112,7 @@ A VNet-integrated workstation lets you apply the controls in
 inside an Azure boundary:
 
 - **Private connectivity**: Keep the source Oracle database, the scratch database, and Microsoft Foundry on private endpoints or restricted firewall rules. The workstation reaches them from inside the virtual network, so you don't open inbound access to Oracle.
-- **Identity-based access to the workstation**: Connect through Azure Bastion with Microsoft Entra ID authentication, and control who can sign in by using Azure role-based access control.
+- **Identity-based access to the workstation**: Reach the workstation only through Azure Bastion (this deployment uses a deploy-time RDP password; optionally enable Microsoft Entra ID sign-in), and control who can connect by using Azure role-based access control.
 - **Microsoft Entra ID for the target database**: Connect to Azure Database for PostgreSQL flexible server with Microsoft Entra authentication instead of passwords. See [Use Microsoft Entra ID authentication](schema-conversions-best-practices.md#use-microsoft-entra-id-authentication).
 - **Credential handling**: Don't embed Oracle or PostgreSQL credentials in plain text. Store them in Azure Key Vault and reference them at connect time, as described in [Manage credentials safely](schema-conversions-best-practices.md#manage-credentials-safely).
 - **Customer validation responsibility**: Independently validate all converted objects and review-task resolutions before you deploy to production.
