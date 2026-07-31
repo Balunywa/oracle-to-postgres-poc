@@ -313,24 +313,28 @@ choose **Continue with GitHub** and use the account that holds your Copilot lice
 [![Visual Studio Code Sign in to use GitHub Copilot dialog with the Continue with GitHub sign-in options identified](deploy/azure/media/deployment-guide/19-sign-in-to-copilot.png)](deploy/azure/media/deployment-guide/19-sign-in-to-copilot.png)
 
 Once you're signed in, resolved tasks show in the **Tasks** view and the **Migration Readiness
-Report** becomes available. Review the report's assumptions and *Tasks Not Addressed* before
-moving on. If the confirmation or tasks don't appear, refresh the page and confirm your GitHub
+Report** becomes available. Review the report's assumptions and *Tasks Not Addressed*, and keep
+working the list until every **Mandatory** task is **Resolved** — that's your signal to move to
+Step 5. If the confirmation or tasks don't appear, refresh the page and confirm your GitHub
 sign-in completed.
 
 [![Visual Studio Code showing successful GitHub sign-in with resolved tasks in the Tasks view and the Migration Readiness Report with key assumptions identified](deploy/azure/media/deployment-guide/20-resolved-tasks-review.png)](deploy/azure/media/deployment-guide/20-resolved-tasks-review.png)
 
 ### 5. Produce and deploy `deploy.sql`
 
-The consolidated `deploy.sql` is the single file that creates the whole target schema in
-dependency order. It's written **inside your migration project folder** (the writable folder
-you chose in Step 1 — the Desktop for this POC) once the conversion succeeds, under
-`artifacts/oracle/<schema>/convert/sessions/<session-id>/deploy.sql`. For the `HR` schema that
-is, for example,
-`Desktop\<project>\artifacts\oracle\HR\convert\sessions\<session-id>\deploy.sql`. After you fix
-the root cause of a task, **rerun the conversion** (Step 3) so `deploy.sql` is regenerated — a
-change made directly against the scratch database is *not* propagated.
+Now deploy the converted schema. The conversion already produced a single consolidated
+**`deploy.sql`** that creates every object in dependency order. Find it **inside your migration
+project folder** (the writable folder you chose in Step 1 — the Desktop for this POC), at
+`artifacts/oracle/<schema>/convert/sessions/<session-id>/deploy.sql` — for the `HR` schema, for
+example, `Desktop\<project>\artifacts\oracle\HR\convert\sessions\<session-id>\deploy.sql`.
 
-[![Visual Studio Code showing deploy.sql open under artifacts/oracle/HR/convert/sessions with the ordered CREATE SCHEMA, EXTENSIONS, TYPES, TABLES, and CONSTRAINTS DDL and the Migration Readiness Report summary identified](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)
+> **Only if you resolved tasks in Step 4:** rerun the conversion (Step 3) once more *before*
+> deploying, so a fresh `deploy.sql` is generated **with your fixes**. Resolving a task doesn't
+> rewrite `deploy.sql` on its own, and editing the scratch database directly isn't propagated —
+> only a re-run regenerates the file. If you had no Mandatory tasks, deploy the existing
+> `deploy.sql` as-is.
+
+[![Visual Studio Code with deploy.sql open from the session folder showing the Open, Apply, and Verify actions for deploying the ordered CREATE SCHEMA, TABLES, and CONSTRAINTS DDL to PostgreSQL](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)
 
 To deploy it to the PostgreSQL target:
 
