@@ -329,11 +329,11 @@ project folder** (the writable folder you chose in Step 1 — the Desktop for th
 `artifacts/oracle/<schema>/convert/sessions/<session-id>/deploy.sql` — for the `HR` schema, for
 example, `Desktop\<project>\artifacts\oracle\HR\convert\sessions\<session-id>\deploy.sql`.
 
-> **Only if you resolved tasks in Step 4:** rerun the conversion (Step 3) once more *before*
-> deploying, so a fresh `deploy.sql` is generated **with your fixes**. Resolving a task doesn't
-> rewrite `deploy.sql` on its own, and editing the scratch database directly isn't propagated —
-> only a re-run regenerates the file. If you had no Mandatory tasks, deploy the existing
-> `deploy.sql` as-is.
+> **Only if you resolved tasks in Step 4:** resolving a task updates that object's file under
+> `postgres_ddl/<schema>/<object_type>/`, but it does **not** rewrite the consolidated
+> `deploy.sql`. Rerun the conversion (Step 3) once more *before* deploying so a fresh `deploy.sql`
+> is generated **with your fixes** — or deploy the updated per-object files from `postgres_ddl/`
+> instead. If you had no Mandatory tasks, deploy the existing `deploy.sql` as-is.
 
 [![Visual Studio Code with deploy.sql open from the session folder showing the Open, Apply, and Verify actions for deploying the ordered CREATE SCHEMA, TABLES, and CONSTRAINTS DDL to PostgreSQL](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)
 
