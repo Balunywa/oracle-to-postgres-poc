@@ -312,13 +312,14 @@ choose **Continue with GitHub** and use the account that holds your Copilot lice
 
 [![Visual Studio Code Sign in to use GitHub Copilot dialog with the Continue with GitHub sign-in options identified](deploy/azure/media/deployment-guide/19-sign-in-to-copilot.png)](deploy/azure/media/deployment-guide/19-sign-in-to-copilot.png)
 
-Once you're signed in, resolved tasks show in the **Tasks** view and the **Migration Readiness
-Report** becomes available. Review the report's assumptions and *Tasks Not Addressed*, and keep
-working the list until every **Mandatory** task is **Resolved** — that's your signal to move to
-Step 5. If the confirmation or tasks don't appear, refresh the page and confirm your GitHub
+Once you're signed in, a **Resolved N tasks in the selected group** confirmation appears and
+each fixed item shows **RESOLVED** in the **Tasks** view. Keep working the list until every
+**Mandatory** task is **Resolved** — that's your signal to move to Step 5. (The **Migration
+Readiness Report** is also available if you want to re-check assumptions and *Tasks Not
+Addressed*.) If the confirmation or tasks don't appear, refresh the page and confirm your GitHub
 sign-in completed.
 
-[![Visual Studio Code showing successful GitHub sign-in with resolved tasks in the Tasks view and the Migration Readiness Report with key assumptions identified](deploy/azure/media/deployment-guide/20-resolved-tasks-review.png)](deploy/azure/media/deployment-guide/20-resolved-tasks-review.png)
+[![Visual Studio Code after signing in to GitHub Copilot showing the Resolved 8 tasks in the selected group confirmation and a task marked RESOLVED in the Tasks view](deploy/azure/media/deployment-guide/20-resolved-tasks-review.png)](deploy/azure/media/deployment-guide/20-resolved-tasks-review.png)
 
 ### 5. Produce and deploy `deploy.sql`
 
