@@ -339,18 +339,18 @@ example, `Desktop\<project>\artifacts\oracle\HR\convert\sessions\<session-id>\de
 
 To deploy it to the PostgreSQL target:
 
-1. In VS Code, open `deploy.sql` from the session folder above.
-2. Run it against the **`migration_sandbox`** database (`postgresDatabase`) — **not** the
-   server's default `postgres` maintenance database. `deploy.sql` contains no database-switch
-   command, so the objects are created in whatever database the session is connected to. Select
-   `migration_sandbox` one of two ways:
-   - **Right-click `migration_sandbox` in the PostgreSQL explorer → New Query** — this opens an
-     editor already connected to that database; paste or open `deploy.sql` there and run it.
-   - **Or set the database on the connection** — use the connection/database selector at the
-     top-right of the SQL editor, or set the **Database** field to `migration_sandbox` in the
-     connection profile, then reconnect.
-3. With `deploy.sql` in focus, run the whole file (**Run Query**). The objects are created in
-   dependency order.
+1. **Pick the target database first.** `deploy.sql` contains no database-switch command, so its
+   objects land in whatever database the editor is connected to. Make that **`migration_sandbox`**
+   (`postgresDatabase`) — **not** the server's default `postgres` maintenance database. Select it
+   one of two ways:
+   - **Right-click `migration_sandbox` in the PostgreSQL explorer → New Query** — opens an editor
+     already connected to that database.
+   - **Or set the database on the connection** — use the database selector at the top-right of the
+     SQL editor, or set the **Database** field to `migration_sandbox` in the connection profile,
+     then reconnect.
+2. **In VS Code, open `deploy.sql`** from the session folder above into that
+   `migration_sandbox`-connected editor (or paste its contents into the **New Query** window).
+3. Run the whole file (**Run Query**). The objects are created in dependency order.
 4. Refresh the explorer and confirm the schema objects now exist **under `migration_sandbox`**.
 
 [![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)
