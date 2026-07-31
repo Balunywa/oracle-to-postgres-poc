@@ -455,7 +455,6 @@ az group delete -n oracle-bridge-rg --yes
 | [deploy/azure/setup.ps1](deploy/azure/setup.ps1) | PowerShell run by an Azure Run Command — installs VS Code + PostgreSQL extension + Oracle Instant Client + Azure CLI on the workstation |
 | [deploy/azure/teardown.sh](deploy/azure/teardown.sh) | Deletes the resource group and purges the soft-deleted Azure OpenAI account |
 | [deploy/azure/cloud-init.yaml](deploy/azure/cloud-init.yaml) | Cloud-init for the **Oracle source VM** — installs Docker, runs Oracle Database Free 23ai, and seeds the sample HR schema on first boot |
-| [deploy/azure/schema-conversions-vm-workstation.md](deploy/azure/schema-conversions-vm-workstation.md) | Microsoft Learn-style article describing the workstation approach |
 
 ## Deploy from the command line (optional)
 
