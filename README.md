@@ -335,8 +335,6 @@ example, `Desktop\<project>\artifacts\oracle\HR\convert\sessions\<session-id>\de
 > is generated **with your fixes** — or deploy the updated per-object files from `postgres_ddl/`
 > instead. If you had no Mandatory tasks, deploy the existing `deploy.sql` as-is.
 
-[![Visual Studio Code with deploy.sql open from the session folder showing the Open, Apply, and Verify actions for deploying the ordered CREATE SCHEMA, TABLES, and CONSTRAINTS DDL to PostgreSQL](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)
-
 To deploy it to the PostgreSQL target:
 
 1. **Pick the target database first.** `deploy.sql` contains no database-switch command, so its
@@ -352,6 +350,8 @@ To deploy it to the PostgreSQL target:
    `migration_sandbox`-connected editor (or paste its contents into the **New Query** window).
 3. Run the whole file (**Run Query**). The objects are created in dependency order.
 4. Refresh the explorer and confirm the schema objects now exist **under `migration_sandbox`**.
+
+[![Visual Studio Code with deploy.sql open from the session folder showing the Open, Apply, and Verify actions for deploying the ordered CREATE SCHEMA, TABLES, and CONSTRAINTS DDL to PostgreSQL](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)
 
 [![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)
 
