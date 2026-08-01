@@ -358,6 +358,12 @@ To deploy it to the PostgreSQL target:
 
 [![Visual Studio Code Explorer showing the deploy.sql file under artifacts/oracle/HR/convert/sessions in the migration project, opened to reveal the ordered CREATE SCHEMA, EXTENSIONS, TYPES, TABLES, and CONSTRAINTS DDL that builds the target schema in dependency order](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)
 
+[![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)
+
+These tables are **empty** — this POC deploys the schema, not the data. To also move the rows,
+run a separate data-migration tool (**Azure DMS**, **`ora2pg`**, or **`pgloader`**) against the
+new PostgreSQL objects.
+
 > **Watch the active database.** A flexible-server connection defaults to `postgres`, so if you
 > run `deploy.sql` without selecting `migration_sandbox` the schema lands in the wrong database.
 > To undo that, connect to `postgres` and reset its `public` schema with
@@ -380,12 +386,6 @@ To deploy it to the PostgreSQL target:
 > **If "Load Schemas" fails with a permission error on `SYS.ARGUMENT$`:** the migration user
 > needs dictionary read access. Connect as a privileged user and run
 > `GRANT SELECT ANY DICTIONARY TO MIG;` (new deployments already include this grant).
-
-[![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)
-
-These tables are **empty** — this POC deploys the schema, not the data. To also move the rows,
-run a separate data-migration tool (**Azure DMS**, **`ora2pg`**, or **`pgloader`**) against the
-new PostgreSQL objects.
 
 ## Use your own Oracle source
 
