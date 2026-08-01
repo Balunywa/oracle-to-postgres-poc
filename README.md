@@ -349,14 +349,17 @@ To deploy it to the PostgreSQL target:
 2. **In VS Code, open `deploy.sql`** from the session folder above into that
    `migration_sandbox`-connected editor (or paste its contents into the **New Query** window).
 3. Run the whole file (**Run Query**). The objects are created in dependency order.
-4. Refresh the explorer and confirm the schema objects now exist **under `migration_sandbox`**.
+4. Refresh the explorer and confirm the schema objects now exist under the **`public`** schema in
+   **`migration_sandbox`**. (The Oracle `HR` objects map into PostgreSQL's default `public`
+   schema — there's no separate `hr` schema.)
 
 [![Visual Studio Code Explorer showing the deploy.sql file under artifacts/oracle/HR/convert/sessions in the migration project, opened to reveal the ordered CREATE SCHEMA, EXTENSIONS, TYPES, TABLES, and CONSTRAINTS DDL that builds the target schema in dependency order](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)
 
 > **Watch the active database.** A flexible-server connection defaults to `postgres`, so if you
 > run `deploy.sql` without selecting `migration_sandbox` the schema lands in the wrong database.
-> To undo that, connect to `postgres` and run `DROP SCHEMA <schema> CASCADE;`, then re-run
-> against `migration_sandbox`.
+> To undo that, connect to `postgres` and reset its `public` schema with
+> `DROP SCHEMA public CASCADE; CREATE SCHEMA public;` (this clears everything in that database's
+> `public` schema), then re-run against `migration_sandbox`.
 
 > **If the connection times out** (`Could not connect to '…postgres.database.azure.com' within
 > 15 seconds`): the server is almost always **stopped**, not unreachable. Some subscriptions
