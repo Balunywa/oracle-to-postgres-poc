@@ -362,7 +362,7 @@ You should now see the deployed table — and every other schema object that mig
 views, sequences, and so on) — under the **`public`** schema of **`migration_sandbox`** in the
 PostgreSQL explorer.
 
-[![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)
+[![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-migrated-schema-verified.png)](deploy/azure/media/deployment-guide/22-migrated-schema-verified.png)
 
 These tables are **empty** — this POC deploys the schema, not the data. To also move the rows,
 run a separate data-migration tool (**Azure DMS**, **`ora2pg`**, or **`pgloader`**) against the
