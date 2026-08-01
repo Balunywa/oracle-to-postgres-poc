@@ -358,6 +358,10 @@ To deploy it to the PostgreSQL target:
 
 [![Visual Studio Code Explorer showing the deploy.sql file under artifacts/oracle/HR/convert/sessions in the migration project, opened to reveal the ordered CREATE SCHEMA, EXTENSIONS, TYPES, TABLES, and CONSTRAINTS DDL that builds the target schema in dependency order](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)](deploy/azure/media/deployment-guide/21-deploy-sql-overview.png)
 
+You should now see the deployed table — and every other schema object that migrated (tables,
+views, sequences, and so on) — under the **`public`** schema of **`migration_sandbox`** in the
+PostgreSQL explorer.
+
 [![Visual Studio Code PostgreSQL explorer showing the migrated tables and views under the migration_sandbox database public schema, confirming the deployed schema](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)](deploy/azure/media/deployment-guide/22-schema-deployed-verified.png)
 
 These tables are **empty** — this POC deploys the schema, not the data. To also move the rows,
