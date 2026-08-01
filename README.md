@@ -288,22 +288,20 @@ stages, and wait for **Migration Complete**. Select **View Migration Report**.
 
 ### 4. Review, triage, and resolve
 
+The conversion handled everything it could automatically and flagged the rest as **review
+tasks**. Your only job in this step is to clear every **Mandatory** task — then you're ready to
+deploy.
+
 [![Visual Studio Code showing the completed Schema Migration and the Migration Readiness Report with overall conversion status and table of contents identified](deploy/azure/media/deployment-guide/17-migration-readiness-report.png)](deploy/azure/media/deployment-guide/17-migration-readiness-report.png)
 
-1. Read `reports/customer_summary.md` first for the readiness decision, success percentage,
-   and the count of **Mandatory** tasks. For a per-object breakdown with DDL snippets, open
-   `reports/technical_conversion_report.md`; treat `reports/review_tasks.md` as an offline
-   reference and resolve tasks from the Schema Review pane instead.
-2. In the **Schema Review** pane, start in the **Grouped** view to scan tasks by behavioral
-   category (for example *Numeric Semantics*, *Empty String / NULL*), then switch to the
-   **Tasks** view and filter **Status = Pending**, **Priority = Mandatory** to work through
-   them one by one.
-3. Select **Run Task** to open **GitHub Copilot agent mode** with the source and generated
-   DDL loaded. Review the proposed fix, apply it to the `.sql` file under
-   `postgres_ddl/<schema>/<object_type>/`, run it against the scratch database to confirm it
-   compiles, then select **Resolve**.
-4. Independently validate every AI-assisted fix — the success percentage reflects automated
-   coverage, not deployment readiness.
+1. Skim `reports/customer_summary.md` in the session folder for the readiness decision, the
+   success percentage, and how many **Mandatory** tasks you have.
+2. In the **Schema Review** pane, filter to **Status = Pending** and **Priority = Mandatory**.
+   (The **Grouped** view organizes tasks by theme such as *Numeric Semantics*; the **Tasks**
+   view lets you work them one at a time.)
+3. For each task, select **Run Task** to open **GitHub Copilot agent mode** with the source and
+   converted DDL loaded. Review the proposed fix, apply it to the object's `.sql` file under
+   `postgres_ddl/<schema>/<object_type>/`, then select **Resolve**.
 
 [![Visual Studio Code Schema Review pane showing pending migration tasks filtered by Status Pending and Priority Mandatory, ready to resolve](deploy/azure/media/deployment-guide/18-review-pending-tasks.png)](deploy/azure/media/deployment-guide/18-review-pending-tasks.png)
 
@@ -321,11 +319,16 @@ sign-in completed.
 
 [![Visual Studio Code after signing in to GitHub Copilot showing the Resolved 8 tasks in the selected group confirmation and a task marked RESOLVED in the Tasks view](deploy/azure/media/deployment-guide/20-resolved-tasks-review.png)](deploy/azure/media/deployment-guide/20-resolved-tasks-review.png)
 
+> **Validate before you trust it.** Independently check each AI-assisted fix — the success
+> percentage reflects automated coverage, not deployment readiness. For per-object DDL and a
+> deeper technical view, open `reports/technical_conversion_report.md` in the session folder.
+
 ### 5. Produce and deploy `deploy.sql`
 
-Now deploy the converted schema. The conversion already produced a single consolidated
-**`deploy.sql`** that creates every object in dependency order. Find it **inside your migration
-project folder** (the writable folder you chose in Step 1 — the Desktop for this POC), at
+Now deploy the converted schema — this part is quick. The conversion already produced a single
+consolidated **`deploy.sql`** that creates every object in dependency order; you just open it and
+run it against `migration_sandbox`. Find it **inside your migration project folder** (the
+writable folder you chose in Step 1 — the Desktop for this POC), at
 `artifacts/oracle/<schema>/convert/sessions/<session-id>/deploy.sql` — for the `HR` schema, for
 example, `Desktop\<project>\artifacts\oracle\HR\convert\sessions\<session-id>\deploy.sql`.
 
@@ -360,6 +363,8 @@ To deploy it to the PostgreSQL target:
 > To undo that, connect to `postgres` and reset its `public` schema with
 > `DROP SCHEMA public CASCADE; CREATE SCHEMA public;` (this clears everything in that database's
 > `public` schema), then re-run against `migration_sandbox`.
+
+**Troubleshooting** — skip unless something fails:
 
 > **If the connection times out** (`Could not connect to '…postgres.database.azure.com' within
 > 15 seconds`): the server is almost always **stopped**, not unreachable. Some subscriptions
