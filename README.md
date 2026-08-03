@@ -1,4 +1,4 @@
-# Oracle → Azure Database for PostgreSQL — Rapid Migration POC
+# Oracle To Azure Database for PostgreSQL Rapid Migration POC
 
 A configurable rapid POC for converting an Oracle schema to **Azure Database for PostgreSQL**,
 deployed by a single **Deploy to Azure** button. Choose the complete environment or only the
@@ -7,7 +7,7 @@ components you need:
 - a **Windows workstation** running desktop **Visual Studio Code + the Microsoft PostgreSQL
   extension** (the tool that performs the AI conversion),
 - an **Oracle source database** (Oracle Database Free 23ai in a container) pre-seeded with a
-  sample **HR** schema — so you can prove the tooling end to end with zero external dependencies,
+  sample **HR** schema  so you can prove the tooling end to end with zero external dependencies,
 - an **Azure Database for PostgreSQL flexible server** as the conversion target, and
 - an **Azure OpenAI (Microsoft Foundry)** model deployment that powers the AI conversion.
 
