@@ -512,3 +512,21 @@ password you set, then use VS Code. Reset the password later via `az vm run-comm
 - The login password is a `@secure()` deploy-time parameter (not stored in the template) and can be rotated with `az vm run-command`. It is reused for the Oracle and PostgreSQL admin accounts for POC convenience — change them for anything beyond a POC.
 - The workstation uses a system-assigned managed identity, granted only the **Cognitive Services OpenAI User** role on the lab's Azure OpenAI account.
 - Independently validate all converted objects before deploying to production.
+
+## Contributors
+
+_The following people contributed to this project._
+
+Principal author:
+
+- [Lukman Balunywa](https://www.linkedin.com/in/lukman-balunywa-a68620118) | Principal Solution Engineer, Cloud/AI Platforms
+
+Other contributors:
+
+- Naren Narendra | Principal Group Program Manager, R&D Data – SQL DB
+- [Vijayalakshmi Somasundaram](https://www.linkedin.com/in/sviji/) | Principal Solution Engineer, Cloud/AI Platforms
+- [Huan Lee](https://www.linkedin.com/in/huanlee) | Principal Solution Engineer, Cloud/AI Platforms
+- [Jarrett Long](https://www.linkedin.com/in/jarrettlong) | Principal Solution Engineer, Cloud/AI Platforms
+- [Jamail Abelhad](https://www.linkedin.com/in/jamailabelhad) | Senior Solution Engineer, Cloud/AI Platforms
+
+_To see nonpublic LinkedIn profiles, sign in to LinkedIn._
